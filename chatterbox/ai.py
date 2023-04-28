@@ -1,19 +1,20 @@
 import os
 from pathlib import Path
 
-# import dotenv
+import dotenv
 import openai
+from config.settings import BASE_DIR
 
 from .files import read_file, write_file
 
-# if Path('config/.env').exists():
-#     dotenv.read_dotenv('config/.env')
+path = Path(BASE_DIR)/'config/.env'
+if path.exists():
+    dotenv.read_dotenv(path)
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+    print(os.getenv("OPENAI_API_KEY"))
+else:
+    print('BAD CONFIG')
 
-#     # Load your API key from an environment variable or secret management service
-#     openai.api_key = os.getenv("OPENAI_API_KEY")
-
-openai.api_key = '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'
-# print(openai.Model.list())
 
 def transform_prompt(text):
     messages = [
@@ -22,12 +23,12 @@ def transform_prompt(text):
     ]
     response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages, max_tokens=50)
     print(response['choices'][0]['message']['content'])
-    # return response['choices'][0]
 
-def ghost_prompt(request, response):
-    # print(f'Request {request}, Response: {response}')
-    text = read_file(request)
+def ghost_prompt(in_file, out_file):
+    d = '/Users/seaman/Hammer/Documents/Shrinking-World-Pubs/SoftwareEngineering/AI'
+    in_file = f'{d}/Milestones.md'
+    out_file = f'{d}/Response.md'
+    print(f'Request {in_file}, Response: {out_file}')
+    text = read_file(in_file)
     text = transform_prompt(text)
-
-    # write_file(response, text)
-    # print(text)
+    write_file(out_file, text)

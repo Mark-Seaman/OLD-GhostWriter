@@ -1,6 +1,10 @@
+from pathlib import Path
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 from os import getenv, system
+
+from .text import text_join
+from .files import recursive_files
 
 
 '''
@@ -15,26 +19,13 @@ Examples:
 
 '''
 
-def project_function(args):
-    # Function to handle "project" command
-    # ...
-    if not args:
-        return 'usage: project pub-name'
-    pub_name = args[0]
-    return f'''\nproject {pub_name}
-        - create directory in Shrinking-World-Pubs
-        - create directory Shrinking-World-Pubs/ {pub_name}/Pub and AI
-        - copy scripts into AI directory
-        - create chapters for Cover, Table of Contents, Introduction
-        '''
-
-
-def chapter_function(args):
+def chapter_script(args):
     # Function to handle "chapter" command
     # ...
     if not args[1:]:
         return 'usage: chapter pub-name chapter-name'
     pub_name, chapter = args
+    project_script(args)
     return f'''\nchapter {pub_name} {chapter}
         - create a directory in AI for chapter drafts
         - apply "Initial.md" script to chapter create "01.md"
@@ -42,7 +33,7 @@ def chapter_function(args):
         '''
 
 
-def create_function(args):
+def create_script(args):
     # Function to handle "edit" command
     # ...
     if not args[3:]:
@@ -55,19 +46,7 @@ def create_function(args):
         - store the response in a the file as the latest draft (eg. 01.md, 02.md, ...)
         '''
     
-def publish_function(args):
-    # Function to handle "edit" command
-    # ...
-    if not args[1:]:
-        return 'usage: publish pub-name chapter-name'
-    pub_name, chapter = args
-    return f'''\npublish {pub_name} {chapter}
-        - copy the latest version of the chapter draft into the "Pub" directory
-        - rebuild the Pub/Index.md file to match the new contents from "_content.csv" 
-        '''
-    
-
-def edit_function(args):
+def edit_script(args):
     # Function to handle "edit" command
     # ...
     if not args[1:]:
@@ -84,17 +63,66 @@ def edit_function(args):
         '''
     
 
+def files_script(args):
+    if not args:
+        return 'usage: files pub-name'
+    pub_root = Path(f'{getenv("SHRINKING_WORLD_PUBS")}/{args[0]}')
+    print(pub_root)
+    files = pub_root.rglob('*')
+    files = [str(f).replace(str(pub_root)+'/', '    ') for f in files if f.is_file()]
+    return f'Files:\n\n{text_join(files)}'
+
+
+def project_script(args):
+    def make_project_dirs(pub_root):
+        ai_path = pub_root/'AI'
+        pub_path = pub_root/'Pub'
+        image_path = pub_root/'Images'
+        ai_path.mkdir(parents=True, exist_ok=True)
+        pub_path.mkdir(parents=True, exist_ok=True)
+        image_path.mkdir(parents=True, exist_ok=True)
+        return ai_path, pub_path, image_path
+
+    if not args:
+        return 'usage: project pub-name'
+    pub_name = args[0]
+    pub_root = Path(f'{getenv("SHRINKING_WORLD_PUBS")}/{pub_name}')
+    ai_path, pub_path, image_path = make_project_dirs(pub_root)
+    
+    return f'''\nproject {pub_name}
+        - create directory {ai_path}
+        - create directory {pub_path}
+        - create directory {image_path}
+        - copy scripts into AI directory
+        - create chapters for Cover, Table of Contents, Introduction
+        '''
+
+
+def publish_script(args):
+    # Function to handle "edit" command
+    # ...
+    if not args[1:]:
+        return 'usage: publish pub-name chapter-name'
+    pub_name, chapter = args
+    return f'''\npublish {pub_name} {chapter}
+        - copy the latest version of the chapter draft into the "Pub" directory
+        - rebuild the Pub/Index.md file to match the new contents from "_content.csv" 
+        '''
+    
+
 def pub_script_command(command, args):
     if command == 'project':
-        output = project_function(args)
+        output = project_script(args)
     elif command == 'chapter':
-        output = chapter_function(args)
+        output = chapter_script(args)
     elif command == 'create':
-        output = create_function(args)
+        output = create_script(args)
     elif command == 'publish':
-        output = publish_function(args)
+        output = publish_script(args)
     elif command == 'edit':
-        output = edit_function(args)
+        output = edit_script(args)
+    elif command == 'files':
+        output = files_script(args)
     else:
         output = "Invalid command: {}".format(command)
     return output

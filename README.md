@@ -125,5 +125,35 @@ Run a text editor and visit the chapter content so that it can be edited.
         Run the system script
             $EDITOR $SHRINKING_WORLD_PUBS/$PUB/$CHAPTER
 
+### files Command
+Create a list of files in the selected pub project.
+
+    example:
+        files SoftwareEngineering
+
+    usage:
+        python manage.py files pub_name
+
+    actions:
+        GhostWriter/config/.env
+            - SHRINKING_WORLD_PUBS={pubs_path}
+        Recursive list all all files
+
+
+
 ## Prompt Library
 
+The prompts for ChatGPT are organized around different domains.
+
+* Django code
+* Linux automation
+* Software Engineering
+* Innovation
+* Web design
+* Write
+* Teach
+* Learn
+* Spirituality
+* Publish
+* Stories
+* Poems

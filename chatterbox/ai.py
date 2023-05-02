@@ -1,4 +1,4 @@
-import os
+from os import getenv
 from pathlib import Path
 
 import dotenv
@@ -8,7 +8,7 @@ from config.settings import BASE_DIR
 from .files import read_file, write_file
 
 def transform_prompt(text):
-    openai.api_key = os.getenv("OPENAI_API_KEY")
+    openai.api_key = getenv("OPENAI_API_KEY")
     messages = [
         dict(role='system', content='You are an assistant'),
         dict(role='user', content=f'write a summary of this [content]\n\n{text}')

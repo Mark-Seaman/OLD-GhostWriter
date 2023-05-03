@@ -26,6 +26,9 @@ def chapter_script(args):
         return 'usage: chapter pub-name chapter-name'
     pub_name, chapter = args
     project_script(args)
+    chapter_path = pub_path(pub_name)/'AI'/chapter
+    chapter_path.mkdir(parents=True, exist_ok=True)
+    edit_script([pub_name, 'AI'])
     return f'''\nchapter {pub_name} {chapter}
         - create a directory in AI for chapter drafts
         - apply "Initial.md" script to chapter create "01.md"
@@ -46,6 +49,7 @@ def create_script(args):
         - store the response in a the file as the latest draft (eg. 01.md, 02.md, ...)
         '''
     
+
 def edit_script(args):
     # Function to handle "edit" command
     # ...
@@ -61,7 +65,7 @@ def edit_script(args):
         - PUB={pub_name}
         - CHAPTER={chapter}
         '''
-    
+
 
 def files_script(args):
     if not args:
@@ -76,25 +80,21 @@ def files_script(args):
 def project_script(args):
     def make_project_dirs(pub_root):
         ai_path = pub_root/'AI'
-        pub_path = pub_root/'Pub'
+        pubication_path = pub_root/'Pub'
         image_path = pub_root/'Images'
         ai_path.mkdir(parents=True, exist_ok=True)
-        pub_path.mkdir(parents=True, exist_ok=True)
+        pubication_path.mkdir(parents=True, exist_ok=True)
         image_path.mkdir(parents=True, exist_ok=True)
-        return ai_path, pub_path, image_path
+        return ai_path, pubication_path, image_path
 
     if not args:
         return 'usage: project pub-name'
-    pub_name = args[0]
-    pub_root = Path(f'{getenv("SHRINKING_WORLD_PUBS")}/{pub_name}')
-    ai_path, pub_path, image_path = make_project_dirs(pub_root)
-    
-    return f'''\nproject {pub_name}
+    pub_root = pub_path(args[0])
+    ai_path, pubication_path, image_path = make_project_dirs(pub_root)
+    return f'''\nproject {args[0]}
         - create directory {ai_path}
-        - create directory {pub_path}
+        - create directory {pubication_path}
         - create directory {image_path}
-        - copy scripts into AI directory
-        - create chapters for Cover, Table of Contents, Introduction
         '''
 
 
@@ -108,7 +108,11 @@ def publish_script(args):
         - copy the latest version of the chapter draft into the "Pub" directory
         - rebuild the Pub/Index.md file to match the new contents from "_content.csv" 
         '''
-    
+
+
+def pub_path(pub):
+    return Path(f'{getenv("SHRINKING_WORLD_PUBS")}/{pub}')
+
 
 def pub_script_command(command, args):
     if command == 'project':

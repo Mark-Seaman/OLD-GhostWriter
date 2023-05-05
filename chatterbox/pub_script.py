@@ -3,8 +3,8 @@ from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 from os import getenv, system
 
-from .text import text_join
-from .files import recursive_files
+from .text import text_join, text_lines
+from .files import read_file, recursive_files
 
 
 '''
@@ -76,6 +76,29 @@ def files_script(args):
     files = [str(f).replace(str(pub_root)+'/', '    ') for f in files if f.is_file()]
     return f'Files:\n\n{text_join(files)}'
 
+pub_js = '''
+{
+    "name": "",
+    "site_title": "",
+    "site_subtitle": "",
+    "domain": "https://shrinking-world.com",
+    "url": "/analytics",
+    "title": "",
+    "author": "Mark Seaman",
+    "description": "",
+    "css": "/static/css/book.css",
+    "doc_path": "Documents/Shrinking-World-Pubs//Pub",
+    "image_path": "/static/images/Shrinking-World-Pubs/",
+    "cover_image": "/static/images/Shrinking-World-Pubs//Cover.png",
+    "cover_title": false,
+    "pub_type": "private",
+    "menu": "static/js/nav_blog.json",
+    "auto_contents": false,
+    "auto_index": true,
+    "simple_index": true
+}
+'''
+
 
 def project_script(args):
     def make_project_dirs(pub_root):
@@ -87,10 +110,16 @@ def project_script(args):
         image_path.mkdir(parents=True, exist_ok=True)
         return ai_path, pubication_path, image_path
 
+    def make_js(pub_root, pub_name):
+        js = pub_root / f'Pub/{pub_name}.js'
+        if not js.exists():
+            js.write_text(pub_js)
+
     if not args:
-        return 'usage: project pub-name'
+        return 'usage: project pub-dir pub-name'
     pub_root = pub_path(args[0])
     ai_path, pubication_path, image_path = make_project_dirs(pub_root)
+    make_js(pub_path(args[0]), args[1])
     return f'''\nproject {args[0]}
         - create directory {ai_path}
         - create directory {pubication_path}
@@ -114,6 +143,19 @@ def pub_path(pub):
     return Path(f'{getenv("SHRINKING_WORLD_PUBS")}/{pub}')
 
 
+def scriptor_script(args):
+    pub = args[0]
+    pub_root = pub_path(pub)
+    pub_script = read_file(pub_root / f'AI/Script/{pub}.ai')
+    lines = text_lines(pub_script)
+    text = f'pub_script_command: {pub}\n\n'
+    for c in lines:
+        if c.strip():
+            x = c.split(' ')
+            text += pub_script_command(x[0], x[1:])
+    return f'SCRIPTOR: \n\n{text}'
+
+
 def pub_script_command(command, args):
     if command == 'project':
         output = project_script(args)
@@ -127,6 +169,8 @@ def pub_script_command(command, args):
         output = edit_script(args)
     elif command == 'files':
         output = files_script(args)
+    elif command == 'scriptor':
+        output = scriptor_script(args)
     else:
         output = "Invalid command: {}".format(command)
     return output

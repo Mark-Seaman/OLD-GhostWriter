@@ -2,6 +2,7 @@ from pathlib import Path
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 from os import getenv, system
+from re import match
 
 from .text import text_join, text_lines
 from .files import read_file, recursive_files
@@ -66,15 +67,49 @@ def edit_script(args):
         - CHAPTER={chapter}
         '''
 
+def extract_outline(text, section_number):
+    lines = text.split('\n')
+    outline = ''
+    matching = False
+    for line in lines:
+        i = len(line)-len(line.lstrip())
+        if matching == True:
+            if indent >= i:
+                return outline
+            outline += line[indent:]+'\n'
+        elif line.lstrip().startswith(section_number):
+            matching = True
+            indent = i
+            outline += line[indent:]+'\n'
+    return outline
+
 
 def files_script(args):
     if not args:
         return 'usage: files pub-name'
     pub_root = Path(f'{getenv("SHRINKING_WORLD_PUBS")}/{args[0]}')
-    print(pub_root)
+    # print(pub_root)
     files = pub_root.rglob('*')
     files = [str(f).replace(str(pub_root)+'/', '    ') for f in files if f.is_file()]
     return f'Files:\n\n{text_join(files)}'
+
+
+def markdown_to_outline(text):
+    # Define a regular expression pattern to match headings
+    heading_pattern = r'^(#+)\s+(.*)'
+    lines = text.split('\n')
+    outline = ''
+    for line in lines:
+        # Check if the line matches the heading pattern
+        x = match(heading_pattern, line)
+        if x:
+            # Extract the heading level and text
+            level = len(x.group(1))
+            text = x.group(2)
+            # Add the heading to the outline with the appropriate indentation
+            outline += '    ' * (level - 1) + text + '\n'
+    return outline
+
 
 pub_js = '''
 {

@@ -5,7 +5,7 @@ import openai
 from .pub_script import pub_path
 from config.settings import BASE_DIR
 
-from .files import read_file, write_file
+from publish.files import read_file, write_file
 
 def transform_prompt(text):
     openai.api_key = getenv("OPENAI_API_KEY")

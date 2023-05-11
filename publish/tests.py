@@ -1,4 +1,19 @@
-from django.test import TestCase
+from os import getenv
+from pathlib import Path
+# from django.test import TestCase
+from chatterbox.tests_django import DjangoTest
+from publish.views import list_pubs
+
+class PubTest(DjangoTest):
+
+    def test_pub_root(self):
+        path = Path(f'{getenv("SHRINKING_WORLD_PUBS")}')
+        answer =  '/Users/seaman/Hammer/Documents/Shrinking-World-Pubs'
+        self.assertEqual(str(path), answer)
+
+    def test_num_pubs(self):
+        self.assertEqual(len(list_pubs()), 11)
+
 # from django.urls import reverse
 
 # from myapp.models import MyModel

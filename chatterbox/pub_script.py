@@ -4,8 +4,8 @@ from django.utils.text import slugify
 from os import getenv, system
 from re import match
 
-from .text import text_join, text_lines
-from .files import read_file, recursive_files
+from publish.text import text_join, text_lines
+from publish.files import read_file, recursive_files
 
 
 '''

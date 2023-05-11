@@ -9,7 +9,7 @@ from pathlib import Path
 from re import search
 from subprocess import PIPE, Popen
 
-from chatterbox.text import text_lines
+from publish.text import text_lines
 
 
 def content_word_summary(path):

@@ -1,0 +1,133 @@
+/*  C O L O R S  */
+
+.blue {
+    background-color: rgb(13, 110, 253);
+    color: white;
+}
+
+.green {
+    background-color: rgb(25, 135, 84);
+    color: white;
+}
+
+.red {
+    background-color: rgb(220, 53, 69);
+    color: white;
+}
+
+.yellow {
+    background-color: rgb(255, 193, 7);
+    color: black;
+}
+
+input,
+textarea {
+    width: 100%;
+}
+
+.dark {
+    background-color: rgb(33, 37, 41);
+    color: rgb(248, 249, 250);
+}
+
+
+.light {
+    background-color: rgb(248, 249, 250);
+    color: rgb(33, 37, 41);
+}
+
+
+/*  C A R D S   */
+
+.card-week {
+    background-color: rgb(33, 37, 41);
+    color: rgb(248, 249, 250);
+    box-shadow: 2px 2px 5px black;
+    margin: 1em;
+
+}
+
+.card-lesson {
+    margin: .5em;
+    box-shadow: 2px 2px 5px gray;
+}
+
+/*.card-panel {*/
+/*  border-radius: 20px;*/
+/*    background-color: #343a40;*/
+/*}*/
+
+/*.card-panel p {*/
+/*    color: white;*/
+/*}*/
+
+/*.card-panel a {*/
+/*    color: turquoise;*/
+/*}*/
+
+/*.card-panel img {*/
+/*    box-shadow: 2px 2px 5px black;*/
+/*    border-radius: 20px;*/
+/*}*/
+
+.photo {
+    margin: 3em;
+}
+
+header {
+    background-image: url(https://shrinking-world.com/static/images/shrinking-world.com/shrinking-world.png);
+}
+
+header h1,
+header h2,
+header a {
+    color: white;
+    text-shadow: 2px 2px 5px black;
+}
+
+header a:hover {
+    color: white;
+}
+
+h1 {
+    color: dodgerblue;
+}
+
+img {
+    max-width: 100%;
+}
+
+/*.card-header a {*/
+/*    color: white;*/
+/*}*/
+
+/*.bg-light-gray {*/
+/*    background-color: #ddd;*/
+/*    opacity: 50%;*/
+/*    border: 1px solid black;*/
+/*}*/
+
+/*.bg-light-gray a:hover {*/
+/*    color: black;*/
+/*    font-weight: bold;*/
+/*}*/
+
+/*.card {*/
+/*    border: 1px solid gray;*/
+/*    box-shadow: 2px 2px 5px gray;*/
+/*}*/
+
+/*.card-header {*/
+/*    background-color: green;*/
+/*    font-size: 24px;*/
+/*    color: yellow;*/
+/*    text-align: center;*/
+/*    padding: 0.5rem 3rem;*/
+/*}*/
+
+pre {
+    background-color: #eee;
+    padding: 1em;
+    margin: 1em 2em;
+    border: 1px solid black;
+}

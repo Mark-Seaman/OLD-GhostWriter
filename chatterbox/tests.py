@@ -70,5 +70,6 @@ class GhostTest(DjangoTest):
         content = 'GhostWriter/AI/Pub/TOC.md'  
         task = 'GhostWriter/AI/Pub/Outline.ai' 
         task = None   # Disable the AI API call
-        print(do_gpt_task([output, task, context, content]))
+        answer = "Prompt: output=GhostWriter/AI/Pub/Outline.md task=None prompt=None content,context=['GhostWriter/AI/Pub/Persona.md', 'GhostWriter/AI/Pub/TOC.md']"
+        self.assertEqual(do_gpt_task([output, task, context, content]), answer)
 

@@ -174,8 +174,11 @@ def publish_script(args):
         '''
 
 
-def pub_path(pub):
-    return Path(f'{getenv("SHRINKING_WORLD_PUBS")}/{pub}')
+def pub_path(doc=None):
+    path = Path(f'{getenv("SHRINKING_WORLD_PUBS")}')
+    if doc:
+        return path/doc
+    return path
 
 
 def scriptor_script(args):

@@ -1,53 +1,45 @@
 from os import getenv
 from pathlib import Path
-# from django.test import TestCase
+from chatterbox.pub_script import pub_path
 from chatterbox.tests_django import DjangoTest
-from publish.views import list_pubs
+from publish.pub import doc_html, doc_list, doc_text, doc_title, list_pubs, read_pub_doc
 
 class PubTest(DjangoTest):
 
     def test_pub_root(self):
-        path = Path(f'{getenv("SHRINKING_WORLD_PUBS")}')
-        answer =  '/Users/seaman/Hammer/Documents/Shrinking-World-Pubs'
-        self.assertEqual(str(path), answer)
+        x = Path('/Users/seaman/Hammer/Documents/Shrinking-World-Pubs')
+        y = pub_path()
+        self.assertEqual(y, x)
 
     def test_num_pubs(self):
         self.assertEqual(len(list_pubs()), 11)
 
-# from django.urls import reverse
-
-# from myapp.models import MyModel
-# from myapp.views import MyModelListView, MyModelDetailView
-
-# class MyModelListViewTest(TestCase):
-#     def setUp(self):
-#         # Create some test data
-#         MyModel.objects.create(name='Model 1')
-#         MyModel.objects.create(name='Model 2')
-
-#     def test_get(self):
-#         # Test the GET request
-#         url = reverse('mymodel-list')  # Assuming 'mymodel-list' is the URL name for MyModelListView
-#         response = self.client.get(url)
+    def test_doc_path(self):
         
-#         # Assert that the response has a status code of 200
-#         self.assertEqual(response.status_code, 200)
+        x = Path('/Users/seaman/Hammer/Documents/Shrinking-World-Pubs/GhostWriter/Chapter1.md')
+        y = pub_path('GhostWriter/Chapter1.md')
+        self.assertEqual(y, x)
         
-#         # Assert that the response contains the correct number of objects
-#         self.assertEqual(len(response.context['object_list']), 2)
+    def test_load_doc(self):
+        x = '# Chapter 1 - Introduction'
+        y = read_pub_doc('GhostWriter/Chapter1.md')[:26]
+        self.assertEqual(y, x)
 
-# class MyModelDetailViewTest(TestCase):
-#     def setUp(self):
-#         # Create a test object
-#         self.model = MyModel.objects.create(name='Model 1')
+    def test_doc_title(self):
+        x = 'Chapter 1 - Introduction'
+        y = doc_title('GhostWriter/Chapter1.md')
+        self.assertEqual(y, x)
 
-#     def test_get(self):
-#         # Test the GET request
-#         url = reverse('mymodel-detail', kwargs={'pk': self.model.pk})  # Assuming 'mymodel-detail' is the URL name for MyModelDetailView
-#         response = self.client.get(url)
-        
-#         # Assert that the response has a status code of 200
-#         self.assertEqual(response.status_code, 200)
-        
-#         # Assert that the response contains the correct object
-#         self.assertEqual(response.context['object'], self.model)
+    def test_doc_text(self):
+        x = '    1.1. Purpose of '
+        y = doc_text('GhostWriter/Chapter1.md')[:20]
+        self.assertEqual(y, x)
+
+    def test_doc_list(self):
+        x = 3
+        y = doc_list('GhostWriter')
+        self.assertEqual(len(y), x)
+
+    def test_doc_html(self):
+        text = doc_html('GhostWriter/Chapter1.md')
+        self.assertNumLines(text, 128, 130)

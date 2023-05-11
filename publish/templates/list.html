@@ -23,7 +23,9 @@ Index Page
     <ul>
         {% for pub in pubs %}
         <li>
+            {% autoescape off%}
             {{ pub }}
+            {% endautoescape %}
         </li>
         {% endfor %}
     </ul>

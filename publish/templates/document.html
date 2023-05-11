@@ -12,10 +12,16 @@ Index Page
 
 {% block content %}
 
-<div class="row">
+<div class="row bg-dark">
 
     <h1>{{ doc }}</h1>
     <p>This is the index page template. Add your content here.</p>
+
+    <!-- <pre class="bg-dark">{{ text }}</pre> -->
+
+    {% autoescape off%}
+    {{ text }}
+    {% endautoescape %}
 
 </div>
 

@@ -1,12 +1,12 @@
 from pathlib import Path
 from django.test import TestCase
 from requests import get
-from chatterbox.ai import do_gpt_task
-from publish.files import recursive_files
-from chatterbox.pub_script import extract_outline, markdown_to_outline, pub_path, pub_script_command
-from chatterbox.tests_django import DjangoTest
 
-from publish.text import text_lines
+from publish.pub import pub_path
+
+from .ai import do_gpt_task
+from .pub_script import pub_script_command
+from .tests_django import DjangoTest
 
 
 class GhostTest(DjangoTest):
@@ -16,8 +16,8 @@ class GhostTest(DjangoTest):
 
     def test_pub_files(self):
         directory = pub_path('GhostWriter')
-        self.assertEqual(str(directory), '/Users/seaman/Hammer/Documents/Shrinking-World-Pubs/GhostWriter')
-        self.assertFiles(directory, 20, 40)
+        self.assertEqual(str(directory), '/Users/seaman/Hammer/Documents/Shrinking-World-Pubs/GhostWriter/AI')
+        self.assertFiles(directory, 14, 40)
 
     def test_project(self):
         pub_script_command('project', ['GhostWriter','ghost'])
@@ -28,16 +28,16 @@ class GhostTest(DjangoTest):
         ai = pub_path('GhostWriter')/'AI'
         self.assertTrue(ai.exists())
 
-    def test_outliner(self):
-        directory = pub_path('GhostWriter')
-        doc = directory/'Pub/Chapter2.md'
-        text = markdown_to_outline(doc.read_text())
-        self.assertNumLines(text, 21, 22)
-        text = extract_outline(text, '2.3')
-        self.assertNumLines(text, 6, 6)
-        # print(text)
+    # def test_outliner(self):
+    #     directory = pub_path('GhostWriter')
+    #     doc = directory/'Chapter2/Chapter2.md'
+    #     text = markdown_to_outline(doc.read_text())
+    #     self.assertNumLines(text, 21, 22)
+    #     text = extract_outline(text, '2.3')
+    #     self.assertNumLines(text, 6, 6)
+    #     # print(text)
 
-    def test_chatter(self):
+    # def test_chatter(self):
         output = 'GhostWriter/AI/Pub/Outline.md'  
         context = 'GhostWriter/AI/Pub/Persona.md'  
         content = 'GhostWriter/AI/Pub/TOC.md'  

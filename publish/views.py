@@ -1,9 +1,10 @@
 from django.views.generic import (TemplateView)
-
-from chatterbox.pub_script import pub_path
+from django.views.generic.edit import CreateView, UpdateView
+from django.urls import reverse_lazy
 
 from .files import read_json
-from .pub import doc_html, doc_list, doc_text, list_pubs
+from .pub import pub_path, pub_view_data
+from .models import Document
 
 class PubView(TemplateView):
     template_name = "index.html"
@@ -20,25 +21,45 @@ class DocumentView(PubView):
 
     def get_context_data(self, **kwargs):
         kwargs = super().get_context_data(**kwargs)
-        doc = f"{kwargs['pub']}/{kwargs['doc']}"
-        kwargs['text'] = doc_html(doc)
+        kwargs.update(pub_view_data(**kwargs))
         return kwargs    
     
 
-class DocumentListView(PubView):
-    template_name = "index.html"
+class DocumentEditView(UpdateView):
+    model = Document
+    fields = ['pub', 'chapter']
+    template_name = 'edit.html'
 
-    def get_context_data(self, **kwargs):
-        kwargs = super().get_context_data(**kwargs)
-        kwargs['docs'] = doc_list(kwargs['pub'])
-        return kwargs    
+    def get_success_url(self):
+        return super().get_success_url(f'/GhostWriter/Chapter1')
+
+
+class DocumentAddView(CreateView):
+    model = Document
+    fields = ['pub', 'chapter', 'doc']
+    template_name = 'edit.html'
+
+    def get_success_url(self):
+        return super().get_success_url(f'/GhostWriter/Chapter1')
+
+# class DocumentListView(PubView):
+#     template_name = "index.html"
+
+#     def get_context_data(self, **kwargs):
+#         kwargs = super().get_context_data(**kwargs)
+#         kwargs.update(pub_view_data(**kwargs))
+
+#         # kwargs['docs'] = doc_list(kwargs['pub'])
+#         return kwargs    
     
 
-class PubListView(PubView):
-    template_name = "list.html"
+# class PubListView(PubView):
+#     template_name = "list.html"
 
-    def get_context_data(self, **kwargs):
-        kwargs = super().get_context_data(**kwargs)
-        kwargs['pubs'] = list_pubs()
-        return kwargs    
+#     def get_context_data(self, **kwargs):
+#         kwargs = super().get_context_data(**kwargs)
+#         kwargs.update(pub_view_data(**kwargs))
+
+#         # kwargs['pubs'] = list_pubs()
+#         return kwargs    
   

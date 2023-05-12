@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Create File</title>
+</head>
+
+<body>
+    <h1>Create File</h1>
+
+    {% if error %}
+    <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    {% if success %}
+    <p style="color: green;">{{ success }}</p>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="filename">Filename:</label>
+        <input type="text" id="filename" name="filename">
+        <input type="submit" value="Create File">
+    </form>
+</body>
+
+</html>

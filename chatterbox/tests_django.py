@@ -1,10 +1,10 @@
 from pathlib import Path
 from django.test import TestCase
 from requests import get
-from chatterbox.ai import do_gpt_task
-from publish.files import recursive_files
-from chatterbox.pub_script import extract_outline, markdown_to_outline, pub_path, pub_script_command
 
+from chatterbox.ai import do_gpt_task
+
+from publish.files import recursive_files
 from publish.text import text_lines
 
 

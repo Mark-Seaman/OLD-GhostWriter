@@ -2,7 +2,7 @@ from os import getenv
 from pathlib import Path
 
 import openai
-from .pub_script import pub_path
+from publish.pub import pub_path
 from config.settings import BASE_DIR
 
 from publish.files import read_file, write_file

@@ -12,17 +12,71 @@ Index Page
 
 {% block content %}
 
-<div class="row bg-dark">
+<div class="row">
 
-    <h1>{{ doc }}</h1>
-    <p>This is the index page template. Add your content here.</p>
+    <div class="col-lg-3">
 
-    <!-- <pre class="bg-dark">{{ text }}</pre> -->
+        {% if pubs %}
+        <div>
+            <strong>Pubs</strong>
+            <ul>
+                {% for pub in pubs %}
+                <li>
+                    {% autoescape off%}
+                    {{ pub }}
+                    {% endautoescape %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif%}
 
-    {% autoescape off%}
-    {{ text }}
-    {% endautoescape %}
+        {% if pub %}
+        <div>
+            <strong>{{ pub }}</strong>
+            <ul>
+                {% for doc in chapters %}
+                <li>
+                    {% autoescape off%}
+                    {{ doc }}
+                    {% endautoescape %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif%}
+
+        {% if chapter %}
+        <div>
+            <strong>{{ chapter }}</strong>
+            <ul>
+                {% for doc in docs %}
+                <li>
+                    {% autoescape off%}
+                    {{ doc }}
+                    {% endautoescape %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif%}
+
+    </div>
+
+    {% if doc %}
+    <div class="col">
+        <div>
+
+            <h1>{{ doc }}</h1>
+            <p>This is the index page template. Add your content here.</p>
+
+            {% autoescape off%}
+            {{ html }}
+            {% endautoescape %}
+
+        </div>
+    </div>
+    {% endif%}
 
 </div>
-
 {% endblock content %}

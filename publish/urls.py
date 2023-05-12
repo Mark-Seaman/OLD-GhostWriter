@@ -1,12 +1,15 @@
 from django.urls import path
 
-from publish.views import DocumentListView, DocumentView, PubListView, PubView
+from publish.views import  DocumentAddView, DocumentEditView, DocumentView
 
 urlpatterns = [
-    # Pub Views
-    path("", PubListView.as_view()),
-    path("<str:pub>", DocumentListView.as_view()),
 
-    # Document Views
-    path("<str:pub>/<str:doc>", DocumentView.as_view()),
+    # Pub Views
+    path("", DocumentView.as_view()),
+    path("<str:pub>", DocumentView.as_view()),
+    path("<str:pub>/<str:chapter>", DocumentView.as_view()),
+    path('<str:pub>/<str:chapter>/add', DocumentAddView.as_view()),
+    path("<str:pub>/<str:chapter>/<str:doc>", DocumentView.as_view()),
+    path('<str:pub>/<str:chapter>/<str:doc>/', DocumentEditView.as_view()),
+
 ]

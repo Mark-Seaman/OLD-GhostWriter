@@ -3,6 +3,7 @@ from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 from os import getenv, system
 from re import match
+from publish.pub import pub_path
 
 from publish.text import text_join, text_lines
 from publish.files import read_file, recursive_files
@@ -172,13 +173,6 @@ def publish_script(args):
         - copy the latest version of the chapter draft into the "Pub" directory
         - rebuild the Pub/Index.md file to match the new contents from "_content.csv" 
         '''
-
-
-def pub_path(doc=None):
-    path = Path(f'{getenv("SHRINKING_WORLD_PUBS")}')
-    if doc:
-        return path/doc
-    return path
 
 
 def scriptor_script(args):

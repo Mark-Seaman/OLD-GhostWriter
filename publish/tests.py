@@ -7,6 +7,20 @@ from .models import Document
 from .pub import chapter_list, doc_html, doc_list, doc_text, doc_title, pub_path, list_pubs, pub_view_data, read_pub_doc
 
 
+def list_files(pub, glob):
+    files = [f.name for f in pub_path(pub).glob(glob)]
+    return files
+
+
+def ghost_writer_files(glob):
+    return len(list_files('GhostWriter', glob))
+
+
+def ghost_writer_chapters():
+    chapters = pub_view_data(pub='GhostWriter')['chapters']
+    return len(chapters)
+
+
 class PubTest(DjangoTest):
 
     def test_pub_path(self):
@@ -27,15 +41,24 @@ class PubTest(DjangoTest):
         self.assertEqual(y, x)
 
     def test_num_pubs(self):
-        x = 11
+        x = 1
         pubs = list_pubs()
         self.assertEqual(len(pubs), x)
 
         pubs = pub_view_data()['pubs']
         self.assertEqual(len(pubs), x)
 
+    def test_doc_files(self):
+        self.assertEqual(ghost_writer_files('*/*.md'), 21)
+    
+    def test_ai_files(self):
+        self.assertEqual(ghost_writer_files('*/*.ai'), 13)
+    
+    def test_txt_files(self):
+        self.assertEqual(ghost_writer_files('*/*.txt'), 8)
+
     def test_chapters(self):
-        x = 5
+        x = 6
         chapters = chapter_list('GhostWriter')
         self.assertEqual(len(chapters), x)
 

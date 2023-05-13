@@ -21,24 +21,18 @@ def doc_text(pub, chapter, doc):
 
 def list_pubs():
     path = pub_path()
-    # x = []
-    # for pub in path.glob('*/pub.json'):
-    #     if pub.parent.is_dir():
-    #         x.append(pub_link(pub.parent.name))
-    # return x
-    # #     print(p.parent.name)
     return [pub_link(pub.parent.name) for pub in path.glob('*/pub.json') if pub.parent.is_dir()]
 
 
 def doc_list(pub, chapter):
     path = pub_path(pub, chapter)
-    return [doc_link(pub, chapter, doc.name) for doc in path.glob('*.md') if doc.is_file()]
+    return [doc_link(pub, chapter, doc.name) for doc in sorted(path.glob('*.md')) if doc.is_file()]
 
 
 def chapter_list(pub):
     path = pub_path(pub)
     return [pub_link(pub, chapter.name) for chapter in path.iterdir() if chapter.is_dir()]
-# pub_link(pub)
+
 
 def pub_link(pub, chapter=None):
     if chapter:

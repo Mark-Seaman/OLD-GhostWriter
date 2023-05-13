@@ -78,27 +78,27 @@ Index Page
     {% if ai or human %}
     <div class="col-lg-3">
 
-        {% if ai %}
+        {% if human %}
         <div class="card bg-dark m-2 p-5">
 
-            <h3>AI Notes</h3>
-            <a class="btn btn-primary">Run Script</a>
+            <h3>Human Prompt</h3>
+            <a class="btn btn-primary">Edit Files</a>
 
             {% autoescape off%}
-            {{ ai }}
+            {{ human }}
             {% endautoescape %}
 
         </div>
         {% endif%}
 
-        {% if human %}
+        {% if ai %}
         <div class="card bg-dark m-2 p-5">
 
-            <h3>Human Notes</h3>
-            <a class="btn btn-primary">Edit Files</a>
+            <h3>AI Prompt</h3>
+            <a class="btn btn-primary">Run Script</a>
 
             {% autoescape off%}
-            {{ human }}
+            {{ ai }}
             {% endautoescape %}
 
         </div>

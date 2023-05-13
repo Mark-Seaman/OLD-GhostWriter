@@ -43,7 +43,7 @@ class PubTest(DjangoTest):
         self.assertEqual(len(chapters), x)
 
     def test_doc_list(self):
-        x = 1
+        x = 6
         y = doc_list('GhostWriter', 'Chapter1')
         self.assertEqual(len(y), x)
 

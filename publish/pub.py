@@ -21,12 +21,18 @@ def doc_text(pub, chapter, doc):
 
 def list_pubs():
     path = pub_path()
-    return [pub_link(pub.name) for pub in path.iterdir() if pub.is_dir()]
+    # x = []
+    # for pub in path.glob('*/pub.json'):
+    #     if pub.parent.is_dir():
+    #         x.append(pub_link(pub.parent.name))
+    # return x
+    # #     print(p.parent.name)
+    return [pub_link(pub.parent.name) for pub in path.glob('*/pub.json') if pub.parent.is_dir()]
 
 
 def doc_list(pub, chapter):
     path = pub_path(pub, chapter)
-    return [doc_link(pub, chapter, doc.name) for doc in path.iterdir() if doc.is_file()]
+    return [doc_link(pub, chapter, doc.name) for doc in path.glob('*.md') if doc.is_file()]
 
 
 def chapter_list(pub):
@@ -64,6 +70,18 @@ def pub_path(pub=None, chapter=None, doc=None):
         path = path
     return path
 
+def doc_ai(pub, chapter, doc):
+    doc = doc.replace('.md', '.ai')
+    path = pub_path(pub, chapter, doc)
+    if path.exists():
+        return markdown(path.read_text())
+    
+def doc_human(pub, chapter, doc):
+    doc = doc.replace('.md', '.txt')
+    path = pub_path(pub, chapter, doc)
+    if path.exists():
+        return markdown(path.read_text())
+
 
 def pub_view_data(**kwargs):
     pub = kwargs.get('pub')
@@ -73,6 +91,8 @@ def pub_view_data(**kwargs):
     if doc and chapter and pub:
         kwargs['text'] = read_pub_doc(pub, chapter, doc)
         kwargs['html'] = doc_html(pub, chapter, doc)
+        kwargs['ai'] = doc_ai(pub, chapter, doc)
+        kwargs['human'] = doc_human(pub, chapter, doc)
     if chapter and pub:
         kwargs['docs'] = doc_list(pub, chapter)
     if pub:

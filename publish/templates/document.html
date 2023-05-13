@@ -64,17 +64,46 @@ Index Page
     </div>
 
     {% if doc %}
-    <div class="col">
-        <div>
-
-            <h1>{{ doc }}</h1>
-            <p>This is the index page template. Add your content here.</p>
+    <div class="col-lg-6">
+        <div class="card bg-light text-dark m-2 p-5">
 
             {% autoescape off%}
             {{ html }}
             {% endautoescape %}
 
         </div>
+    </div>
+    {% endif%}
+
+    {% if ai or human %}
+    <div class="col-lg-3">
+
+        {% if ai %}
+        <div class="card bg-dark m-2 p-5">
+
+            <h3>AI Notes</h3>
+            <a class="btn btn-primary">Run Script</a>
+
+            {% autoescape off%}
+            {{ ai }}
+            {% endautoescape %}
+
+        </div>
+        {% endif%}
+
+        {% if human %}
+        <div class="card bg-dark m-2 p-5">
+
+            <h3>Human Notes</h3>
+            <a class="btn btn-primary">Edit Files</a>
+
+            {% autoescape off%}
+            {{ human }}
+            {% endautoescape %}
+
+        </div>
+        {% endif%}
+
     </div>
     {% endif%}
 

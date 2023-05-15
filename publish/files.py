@@ -7,9 +7,10 @@ from os import W_OK, access, getcwd, listdir, mkdir, remove, walk
 from os.path import dirname, exists, isdir, isfile, join
 from pathlib import Path
 from re import search
+import shutil
 from subprocess import PIPE, Popen
 
-from publish.text import text_lines
+from publish.text import text_join, text_lines, word_count
 
 
 def content_word_summary(path):
@@ -23,6 +24,13 @@ def content_word_summary(path):
     words = word_count(text)
     counts.append(f'Total Words = {words}\n\n')
     return text_join(counts)
+
+
+def copy_files(source, dest):
+    dest = Path(dest)
+    dest.mkdir(parents=True, exist_ok=True)
+    for f in Path(source).glob('*'):
+        shutil.copy2(f, dest/f.name)
 
 
 # Print the count and directory name

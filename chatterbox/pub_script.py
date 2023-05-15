@@ -6,7 +6,7 @@ from re import match
 from publish.pub import pub_path
 
 from publish.text import text_join, text_lines
-from publish.files import read_file, recursive_files
+from publish.files import copy_files, read_file, recursive_files
 
 
 '''
@@ -26,16 +26,11 @@ def chapter_script(args):
     # ...
     if not args[1:]:
         return 'usage: chapter pub-name chapter-name'
-    pub_name, chapter = args
-    project_script(args)
-    chapter_path = pub_path(pub_name)/'AI'/chapter
+    pub, chapter = args
+    chapter_path = pub_path(pub, chapter)
     chapter_path.mkdir(parents=True, exist_ok=True)
-    edit_script([pub_name, 'AI'])
-    return f'''\nchapter {pub_name} {chapter}
-        - create a directory in AI for chapter drafts
-        - apply "Initial.md" script to chapter create "01.md"
-        - edit the "_content.csv" file to include the chapter
-        '''
+    copy_files(pub_path(pub, 'Storyboard'), chapter_path)
+    return chapter_path
 
 
 def create_script(args):
@@ -137,30 +132,21 @@ pub_js = '''
 
 
 def project_script(args):
-    def make_project_dirs(pub_root):
-        ai_path = pub_root/'AI'
-        pubication_path = pub_root/'Pub'
-        image_path = pub_root/'Images'
-        ai_path.mkdir(parents=True, exist_ok=True)
-        pubication_path.mkdir(parents=True, exist_ok=True)
-        image_path.mkdir(parents=True, exist_ok=True)
-        return ai_path, pubication_path, image_path
-
-    def make_js(pub_root, pub_name):
-        js = pub_root / f'Pub/{pub_name}.js'
+    def make_json(pub_root, pub_name):
+        js = pub_root / f'{pub_name}.json'
         if not js.exists():
             js.write_text(pub_js)
 
     if not args:
         return 'usage: project pub-dir pub-name'
     pub_root = pub_path(args[0])
-    ai_path, pubication_path, image_path = make_project_dirs(pub_root)
-    make_js(pub_path(args[0]), args[1])
-    return f'''\nproject {args[0]}
-        - create directory {ai_path}
-        - create directory {pubication_path}
-        - create directory {image_path}
-        '''
+
+    (pub_root/'AI').mkdir(parents=True, exist_ok=True)
+    (pub_root/'Pub').mkdir(parents=True, exist_ok=True)
+    (pub_root/'Images').mkdir(parents=True, exist_ok=True)
+
+    make_json(pub_path(args[0]), args[1])
+    return str(pub_root)
 
 
 def publish_script(args):
@@ -174,6 +160,53 @@ def publish_script(args):
         - rebuild the Pub/Index.md file to match the new contents from "_content.csv" 
         '''
 
+usage = '''
+
+usage:
+    project GhostWriter
+    chapter GhostWriter Chapter1
+    publish GhostWriter Chapter1 FinalVerson.md
+    edit GhostWriter Chapter1
+    files GhostWriter Chapter1
+    ai GhostWriter Chapter1 Outline1
+    md GhostWriter Chapter1 Outline1
+    txt GhostWriter Chapter1 Outline1
+    outline GhostWriter Chapter1 Outline1
+    expand GhostWriter Chapter1 Outline1
+    draft GhostWriter Chapter1 Outline1
+
+'''
+def pub_script_command(command, args):
+    if command == 'project':
+        output = project_script(args)
+    elif command == 'chapter':
+        output = chapter_script(args)
+    elif command == 'chatgpt':
+        output = 'not implemented'
+    elif command == 'create':
+        output = create_script(args)
+    elif command == 'expand':
+        output = 'not implemented'
+    elif command == 'outline':
+        output = create_outline(args)
+    elif command == 'publish':
+        output = publish_script(args)
+    elif command == 'edit':
+        output = edit_script(args)
+    elif command == 'files':
+        output = files_script(args)
+    elif command == 'scriptor':
+        output = scriptor_script(args)
+    else:
+        output = "Invalid command: {}".format(command) + usage
+    return output
+
+def create_outline(args):
+    path = pub_path(args[0], args[1], args[2])
+    text = markdown_to_outline(path.read_text())
+    if args[3:]:
+        text = extract_outline(text, args[3])
+    return text
 
 def scriptor_script(args):
     pub = args[0]
@@ -188,21 +221,3 @@ def scriptor_script(args):
     return f'SCRIPTOR: \n\n{text}'
 
 
-def pub_script_command(command, args):
-    if command == 'project':
-        output = project_script(args)
-    elif command == 'chapter':
-        output = chapter_script(args)
-    elif command == 'create':
-        output = create_script(args)
-    elif command == 'publish':
-        output = publish_script(args)
-    elif command == 'edit':
-        output = edit_script(args)
-    elif command == 'files':
-        output = files_script(args)
-    elif command == 'scriptor':
-        output = scriptor_script(args)
-    else:
-        output = "Invalid command: {}".format(command)
-    return output

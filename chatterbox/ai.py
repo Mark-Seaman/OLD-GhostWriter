@@ -7,13 +7,16 @@ from config.settings import BASE_DIR
 
 from publish.files import read_file, write_file
 
+
 def transform_prompt(text):
     openai.api_key = getenv("OPENAI_API_KEY")
     messages = [
         dict(role='system', content='You are an assistant'),
-        dict(role='user', content=f'write a summary of this [content]\n\n{text}')
+        dict(role='user',
+             content=f'write a summary of this [content]\n\n{text}')
     ]
-    response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages, max_tokens=1000)
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo", messages=messages, max_tokens=1000)
     return response['choices'][0]['message']['content']
 
 
@@ -47,4 +50,3 @@ def do_gpt_task(args):
     if prompt:
         apply_prompt(args[0], prompt)
     return f'Prompt: output={args[0]} task={args[1]} prompt={prompt} content,context={args[2:]}'
-

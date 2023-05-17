@@ -1,13 +1,14 @@
+from os import getenv, system
 from pathlib import Path
+from re import match
+
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
-from os import getenv, system
-from re import match
-from publish.pub import pub_path
+from chatterbox.ai import do_gpt_task
 
-from publish.text import text_join, text_lines
 from publish.files import copy_files, read_file, recursive_files
-
+from publish.pub import pub_path
+from publish.text import text_join, text_lines
 
 '''
 Writer Script
@@ -20,6 +21,7 @@ Examples:
 - edit SoftwareEngineering 08
 
 '''
+
 
 def chapter_script(args):
     # Function to handle "chapter" command
@@ -45,7 +47,7 @@ def create_script(args):
         - execute the request to get a response
         - store the response in a the file as the latest draft (eg. 01.md, 02.md, ...)
         '''
-    
+
 
 def edit_script(args):
     # Function to handle "edit" command
@@ -62,6 +64,7 @@ def edit_script(args):
         - PUB={pub_name}
         - CHAPTER={chapter}
         '''
+
 
 def extract_outline(text, section_number):
     lines = text.split('\n')
@@ -86,7 +89,8 @@ def files_script(args):
     pub_root = Path(f'{getenv("SHRINKING_WORLD_PUBS")}/{args[0]}')
     # print(pub_root)
     files = pub_root.rglob('*')
-    files = [str(f).replace(str(pub_root)+'/', '    ') for f in files if f.is_file()]
+    files = [str(f).replace(str(pub_root)+'/', '    ')
+             for f in files if f.is_file()]
     return f'Files:\n\n{text_join(files)}'
 
 
@@ -160,6 +164,7 @@ def publish_script(args):
         - rebuild the Pub/Index.md file to match the new contents from "_content.csv" 
         '''
 
+
 usage = '''
 
 usage:
@@ -176,13 +181,15 @@ usage:
     draft GhostWriter Chapter1 Outline1
 
 '''
+
+
 def pub_script_command(command, args):
     if command == 'project':
         output = project_script(args)
     elif command == 'chapter':
         output = chapter_script(args)
     elif command == 'chatgpt':
-        output = 'not implemented'
+        output = chatgpt_script(args)
     elif command == 'create':
         output = create_script(args)
     elif command == 'expand':
@@ -201,12 +208,23 @@ def pub_script_command(command, args):
         output = "Invalid command: {}".format(command) + usage
     return output
 
+
+def chatgpt_script(args):
+    if args[4:] and args[4]:
+        task = pub_path(args[0], args[1], args[3])
+        out_file = pub_path(args[0], args[1], args[2])
+        return f'do_gpt_task([{out_file}, {task}])'
+    else:
+        return ('DISABLED: do_gpt_task', args)
+
+
 def create_outline(args):
     path = pub_path(args[0], args[1], args[2])
     text = markdown_to_outline(path.read_text())
     if args[3:]:
         text = extract_outline(text, args[3])
     return text
+
 
 def scriptor_script(args):
     pub = args[0]
@@ -219,5 +237,3 @@ def scriptor_script(args):
             x = c.split(' ')
             text += pub_script_command(x[0], x[1:])
     return f'SCRIPTOR: \n\n{text}'
-
-

@@ -22,7 +22,7 @@ def transform_prompt(text):
 
 def apply_prompt(out_file, prompt):
     text = transform_prompt(prompt)
-    write_file(pub_path(out_file), text)
+    write_file(out_file, text)
 
 
 def create_prompt(**kwargs):

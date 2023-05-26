@@ -34,8 +34,10 @@ class GhostTest(DjangoTest):
 
     def test_chapter(self):
         text = pub_script_command('chapter', ['GhostWriter', 'Chapter3'])
-        # text = 'Disabled'
-        print(text)
+        self.assertFileLines(
+            pub_path('GhostWriter', 'Chapter3', '1-Idea.txt'), 7, 15)
+        self.assertFileLines(
+            pub_path('GhostWriter', 'Chapter3', '1-Idea.ai'), 1, 10)
 
     def test_outline(self):
         text = pub_script_command(

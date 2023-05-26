@@ -9,11 +9,12 @@ Writer Script
 Examples:
 - project SoftwareEngineering
 - chapter SoftwareEngineering 08
-- create  SoftwareEngineering 08 from 03.md Outline.md
+- gpt  SoftwareEngineering 08 Outline.md
 - publish SoftwareEngineering 08
 - edit SoftwareEngineering 08
 
 '''
+
 
 class Command(BaseCommand):
     help = 'Execute a script that is passed as a list of words.'

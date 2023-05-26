@@ -1,6 +1,6 @@
 from django.urls import path
 
-from publish.views import  DocumentAddView, DocumentEditView, DocumentView
+from publish.views import DocumentAddView, DocumentEditView, DocumentView
 
 urlpatterns = [
 

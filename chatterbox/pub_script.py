@@ -4,11 +4,11 @@ from re import match
 
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
-from chatterbox.ai import do_gpt_task
 
+from chatterbox.ai import apply_prompt, do_gpt_task
 from publish.files import copy_files, read_file, recursive_files
 from publish.pub import pub_path
-from publish.text import text_join, text_lines
+from publish.text import include_files, text_join, text_lines
 
 '''
 Writer Script
@@ -16,7 +16,7 @@ Writer Script
 Examples:
 - project SoftwareEngineering
 - chapter SoftwareEngineering 08
-- create  SoftwareEngineering 08 from 03.md Outline.md
+- gpt  SoftwareEngineering 08 Outline.md
 - publish SoftwareEngineering 08
 - edit SoftwareEngineering 08
 
@@ -35,35 +35,37 @@ def chapter_script(args):
     return chapter_path
 
 
-def create_script(args):
-    # Function to handle "edit" command
-    # ...
-    if not args[3:]:
-        return 'usage: create pub-name chapter-name from content-file script-file'
-    pub_name, chapter, content, script = args
-    return f'''\ncreate {pub_name} {chapter} from {content} {script}
-        - read the script and create a file that can be sent to GPT API
-        - include content from the additional content file to pass to GPT API
-        - execute the request to get a response
-        - store the response in a the file as the latest draft (eg. 01.md, 02.md, ...)
-        '''
+def chatgpt_script(args):
+    if args[2:]:
+        out_file = pub_path(args[0], args[1], args[2])
+        task = str(out_file).replace('.md', '.ai')
+        prompt = read_file(task)
+        prompt = include_files(prompt, out_file.parent)
+        # print(prompt)
+        apply_prompt(out_file, prompt)
+        edit_script(['edit'] + args)
+        return f'created {out_file}'
+    else:
+        return 'usage: pub gpt GhostWriter Chapter1 Outline.md'
+
+
+def create_outline(args):
+    path = pub_path(args[0], args[1], args[2])
+    text = markdown_to_outline(path.read_text())
+    if args[3:]:
+        text = extract_outline(text, args[3])
+    return text
 
 
 def edit_script(args):
     # Function to handle "edit" command
     # ...
-    if not args[1:]:
-        return 'usage: edit pub-name chapter-name'
-    pub_name, chapter = args
+    if not args:
+        return 'usage: pub-name chapter-name'
+    path = pub_path(args[0], args[1])
     editor = getenv("EDITOR")
-    pubs_path = getenv("SHRINKING_WORLD_PUBS")
-    system(f'{editor} {pubs_path}/{pub_name}/{chapter}')
-    return f'''\nedit {editor} {pubs_path}
-        - EDITOR={editor}
-        - SHRINKING_WORLD_PUBS={pubs_path}
-        - PUB={pub_name}
-        - CHAPTER={chapter}
-        '''
+    system(f'{editor} {path}')
+    return f'edit {editor} {path}'
 
 
 def extract_outline(text, section_number):
@@ -170,6 +172,7 @@ usage = '''
 usage:
     project GhostWriter
     chapter GhostWriter Chapter1
+    gpt GhostWriter Chapter1 Outline.md
     publish GhostWriter Chapter1 FinalVerson.md
     edit GhostWriter Chapter1
     files GhostWriter Chapter1
@@ -188,42 +191,23 @@ def pub_script_command(command, args):
         output = project_script(args)
     elif command == 'chapter':
         output = chapter_script(args)
-    elif command == 'chatgpt':
+    elif command == 'gpt':
         output = chatgpt_script(args)
-    elif command == 'create':
-        output = create_script(args)
+    elif command == 'edit':
+        output = edit_script(args)
     elif command == 'expand':
         output = 'not implemented'
+    elif command == 'files':
+        output = files_script(args)
     elif command == 'outline':
         output = create_outline(args)
     elif command == 'publish':
         output = publish_script(args)
-    elif command == 'edit':
-        output = edit_script(args)
-    elif command == 'files':
-        output = files_script(args)
     elif command == 'scriptor':
         output = scriptor_script(args)
     else:
         output = "Invalid command: {}".format(command) + usage
     return output
-
-
-def chatgpt_script(args):
-    if args[4:] and args[4]:
-        task = pub_path(args[0], args[1], args[3])
-        out_file = pub_path(args[0], args[1], args[2])
-        return f'do_gpt_task([{out_file}, {task}])'
-    else:
-        return ('DISABLED: do_gpt_task', args)
-
-
-def create_outline(args):
-    path = pub_path(args[0], args[1], args[2])
-    text = markdown_to_outline(path.read_text())
-    if args[3:]:
-        text = extract_outline(text, args[3])
-    return text
 
 
 def scriptor_script(args):

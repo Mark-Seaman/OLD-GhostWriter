@@ -1,9 +1,11 @@
-from django.views.generic import (TemplateView)
+from os import getenv, system
+from typing import Any, Optional
+from django.views.generic import RedirectView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
 
 from .files import read_json
-from .pub import pub_path, pub_view_data
+from .pub import pub_ai, pub_edit, pub_path, pub_view_data
 from .models import Document
 
 class PubView(TemplateView):
@@ -24,23 +26,34 @@ class DocumentView(PubView):
         kwargs.update(pub_view_data(**kwargs))
         return kwargs    
     
+class DocumentEditView(RedirectView):
 
-class DocumentEditView(UpdateView):
-    model = Document
-    fields = ['pub', 'chapter']
-    template_name = 'edit.html'
+    def get_redirect_url(self, **kwargs):
+        return pub_edit(**kwargs)
 
-    def get_success_url(self):
-        return super().get_success_url(f'/GhostWriter/Chapter1')
+class ApplyAiView(RedirectView):
+
+    def get_redirect_url(self, **kwargs):
+        return pub_ai(**kwargs)
 
 
-class DocumentAddView(CreateView):
-    model = Document
-    fields = ['pub', 'chapter', 'doc']
-    template_name = 'edit.html'
 
-    def get_success_url(self):
-        return super().get_success_url(f'/GhostWriter/Chapter1')
+# class DocumentEditView(UpdateView):
+#     model = Document
+#     fields = ['pub', 'chapter']
+#     template_name = 'edit.html'
+
+#     def get_success_url(self):
+#         return super().get_success_url(f'/GhostWriter/Chapter1')
+
+
+# class DocumentAddView(CreateView):
+#     model = Document
+#     fields = ['pub', 'chapter', 'doc']
+#     template_name = 'edit.html'
+
+#     def get_success_url(self):
+#         return super().get_success_url(f'/GhostWriter/Chapter1')
 
 # class DocumentListView(PubView):
 #     template_name = "index.html"

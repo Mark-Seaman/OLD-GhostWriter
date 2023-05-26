@@ -14,7 +14,7 @@ Index Page
 
 <div class="row">
 
-    <div class="col-lg-3">
+    <div class="col-lg-2">
 
         {% if pubs %}
         <div>
@@ -64,7 +64,9 @@ Index Page
     </div>
 
     {% if doc %}
+
     <div class="col-lg-6">
+
         <div class="card bg-light text-dark m-2 p-5">
 
             {% autoescape off%}
@@ -76,13 +78,15 @@ Index Page
     {% endif%}
 
     {% if ai or human %}
-    <div class="col-lg-3">
+    <div class="col-lg-4">
+        <div>
+            <a class="btn btn-primary" href="/GhostWriter/Chapter3/3-Draft.md/">Edit Files</a>
+        </div>
 
         {% if human %}
-        <div class="card bg-dark m-2 p-5">
+        <div class="card bg-dark">
 
             <h3>Human Prompt</h3>
-            <a class="btn btn-primary">Edit Files</a>
 
             {% autoescape off%}
             {{ human }}
@@ -92,10 +96,12 @@ Index Page
         {% endif%}
 
         {% if ai %}
-        <div class="card bg-dark m-2 p-5">
+        <div class="card bg-dark">
 
             <h3>AI Prompt</h3>
-            <a class="btn btn-primary">Run Script</a>
+            <div>
+                <a class="btn btn-primary" href="/GhostWriter/Chapter3/3-Draft.md/ai">Run Script</a>
+            </div>
 
             {% autoescape off%}
             {{ ai }}

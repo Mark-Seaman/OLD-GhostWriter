@@ -1,4 +1,4 @@
-from os import getenv
+from os import getenv, system
 from pathlib import Path
 from markdown import markdown
 
@@ -93,6 +93,30 @@ def pub_view_data(**kwargs):
         kwargs['chapters'] = chapter_list(pub)
     kwargs['pubs'] = list_pubs()
     return kwargs
+
+def pub_ai(**kwargs):
+    pub = kwargs.get('pub')
+    chapter = kwargs.get('chapter')
+    doc = kwargs.get('doc')
+    path = pub_path(pub, chapter, doc)
+    path2 = str(path).replace('.md','.ai')
+    # editor = getenv("EDITOR")
+    # system(f'{editor} {path} {path2}')
+    print(f'chatgpt: {path} {path2}')
+    url = f'/{pub}/{chapter}/{doc}'
+    return url
+
+def pub_edit(**kwargs):
+    pub = kwargs.get('pub')
+    chapter = kwargs.get('chapter')
+    doc = kwargs.get('doc')
+    path = pub_path(pub, chapter, doc)
+    path2 = str(path).replace('.md','.txt')
+    path3 = str(path).replace('.md','.ai')
+    editor = getenv("EDITOR")
+    system(f'{editor} {path} {path2} {path3}')
+    url = f'/{kwargs["pub"]}/{kwargs["chapter"]}/{kwargs["doc"]}'
+    return url
 
 
 def read_pub_doc(pub, chapter, doc):

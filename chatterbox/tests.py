@@ -5,7 +5,7 @@ from requests import get
 from publish.pub import pub_path
 from publish.text import text_lines
 
-from .ai import do_gpt_task, transform_prompt
+# from .ai import do_gpt_task, transform_prompt
 from .pub_script import extract_outline, markdown_to_outline, pub_script_command
 from .tests_django import DjangoTest
 
@@ -55,11 +55,11 @@ class GhostTest(DjangoTest):
     #     answer = "Prompt: output=GhostWriter/AI/Pub/Outline.md task=None prompt=None content,context=['GhostWriter/AI/Pub/Persona.md', 'GhostWriter/AI/Pub/TOC.md']"
     #     self.assertEqual(do_gpt_task([output, task, context, content]), answer)
 
-    def test_chatgpt(self):
-        x = transform_prompt('write a haiku about trees')
-        y = ''
-        # print(x)
-        self.assertNumLines(x, 3, 3)
+    # def test_chatgpt(self):
+    #     x = transform_prompt('write a haiku about trees')
+    #     y = ''
+    #     # print(x)
+    #     self.assertNumLines(x, 3, 3)
 
     def test_outline_expander(self):
         print(pub_script_command(

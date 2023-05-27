@@ -80,7 +80,7 @@ Index Page
     {% if ai or human %}
     <div class="col-lg-4">
         <div>
-            <a class="btn btn-primary" href="/GhostWriter/Chapter3/3-Draft.md/">Edit Files</a>
+            <a class="btn btn-primary" href="/{{ pub }}/{{ chapter }}/{{ doc }}/">Edit Files</a>
         </div>
 
         {% if human %}
@@ -100,7 +100,7 @@ Index Page
 
             <h3>AI Prompt</h3>
             <div>
-                <a class="btn btn-primary" href="/GhostWriter/Chapter3/3-Draft.md/ai">Run Script</a>
+                <a class="btn btn-primary" href="/{{ pub }}/{{ chapter }}/{{ doc }}/ai">Run Script</a>
             </div>
 
             {% autoescape off%}

@@ -2,9 +2,7 @@ from pathlib import Path
 from django.test import TestCase
 from requests import get
 
-from chatterbox.ai import do_gpt_task
-
-from publish.files import read_file, recursive_files
+from publish.files import read_file
 from publish.text import text_lines
 
 

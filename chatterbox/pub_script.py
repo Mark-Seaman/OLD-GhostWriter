@@ -5,8 +5,8 @@ from re import match
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 
-from chatterbox.ai import apply_prompt, do_gpt_task
-from publish.files import copy_files, read_file, recursive_files
+from chatterbox.ai import apply_prompt
+from publish.files import copy_files, read_file
 from publish.pub import pub_path
 from publish.text import include_files, text_join, text_lines
 

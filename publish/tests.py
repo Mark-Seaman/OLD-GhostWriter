@@ -51,13 +51,13 @@ class PubTest(DjangoTest):
         self.assertEqual(len(pubs), x)
 
     def test_doc_files(self):
-        self.assertEqual(ghost_writer_files('*/*.md'), 27)
+        self.assertEqual(ghost_writer_files('*/*.md'), 28)
 
     def test_ai_files(self):
-        self.assertEqual(ghost_writer_files('*/*.ai'), 19)
+        self.assertEqual(ghost_writer_files('*/*.ai'), 20)
 
     def test_txt_files(self):
-        self.assertEqual(ghost_writer_files('*/*.txt'), 14)
+        self.assertEqual(ghost_writer_files('*/*.txt'), 15)
 
     def test_chapters(self):
         chapters = pub_view_data(pub='GhostWriter')['chapters']

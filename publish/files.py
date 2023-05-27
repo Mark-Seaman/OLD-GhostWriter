@@ -30,7 +30,8 @@ def copy_files(source, dest):
     dest = Path(dest)
     dest.mkdir(parents=True, exist_ok=True)
     for f in Path(source).glob('*'):
-        shutil.copy2(f, dest/f.name)
+        if not (dest/f.name).exists():
+            shutil.copy2(f, dest/f.name)
 
 
 # Print the count and directory name
@@ -295,7 +296,7 @@ def word_count_in_directory(path):
 
 # Write data to a CSV file
 def write_csv_file(path, table):
-    assert(exists(dirname(path)))
+    assert (exists(dirname(path)))
     with open(path, 'w', newline='') as f:
         writer(f).writerows(table)
 

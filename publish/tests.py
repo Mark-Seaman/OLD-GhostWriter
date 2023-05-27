@@ -32,12 +32,14 @@ class PubTest(DjangoTest):
         y = pub_path('GhostWriter')
         self.assertEqual(y, x)
 
-        x = Path('/Users/seaman/Hammer/Documents/Shrinking-World-Pubs/GhostWriter/AI/Chapter1')
-        y = pub_path('GhostWriter','Chapter1')
+        x = Path(
+            '/Users/seaman/Hammer/Documents/Shrinking-World-Pubs/GhostWriter/AI/Chapter1')
+        y = pub_path('GhostWriter', 'Chapter1')
         self.assertEqual(y, x)
 
-        x = Path('/Users/seaman/Hammer/Documents/Shrinking-World-Pubs/GhostWriter/AI/Chapter1/Chapter1.md')
-        y = pub_path('GhostWriter','Chapter1', 'Chapter1.md')
+        x = Path(
+            '/Users/seaman/Hammer/Documents/Shrinking-World-Pubs/GhostWriter/AI/Chapter1/Chapter1.md')
+        y = pub_path('GhostWriter', 'Chapter1', 'Chapter1.md')
         self.assertEqual(y, x)
 
     def test_num_pubs(self):
@@ -50,10 +52,10 @@ class PubTest(DjangoTest):
 
     def test_doc_files(self):
         self.assertEqual(ghost_writer_files('*/*.md'), 27)
-    
+
     def test_ai_files(self):
         self.assertEqual(ghost_writer_files('*/*.ai'), 19)
-    
+
     def test_txt_files(self):
         self.assertEqual(ghost_writer_files('*/*.txt'), 14)
 
@@ -70,7 +72,8 @@ class PubTest(DjangoTest):
         y = read_pub_doc('GhostWriter', 'Chapter1', 'Chapter1.md')[:26]
         self.assertEqual(y, x)
 
-        x = pub_view_data(pub='GhostWriter', chapter='Chapter1', doc='Chapter1.md')['text'][:26]
+        x = pub_view_data(pub='GhostWriter', chapter='Chapter1',
+                          doc='Chapter1.md')['text'][:26]
         self.assertEqual(y, x)
 
     def test_doc_title(self):
@@ -86,9 +89,9 @@ class PubTest(DjangoTest):
     def test_doc_html(self):
         html = doc_html('GhostWriter', 'Chapter1', 'Chapter1.md')
         self.assertNumLines(html, 128, 130)
-        html = pub_view_data(pub='GhostWriter', chapter='Chapter1', doc='Chapter1.md')['html']
+        html = pub_view_data(
+            pub='GhostWriter', chapter='Chapter1', doc='Chapter1.md')['html']
         self.assertNumLines(html, 128, 130)
-
 
 
 class DocumentModelTest(DjangoTest):

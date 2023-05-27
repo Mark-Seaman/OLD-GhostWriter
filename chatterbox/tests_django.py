@@ -4,7 +4,7 @@ from requests import get
 
 from chatterbox.ai import do_gpt_task
 
-from publish.files import recursive_files
+from publish.files import read_file, recursive_files
 from publish.text import text_lines
 
 
@@ -30,6 +30,9 @@ class DjangoTest(TestCase):
         lines = len(text_lines(text))
         self.assertRange(lines, min, max, label=f"Lines in {text}")
 
+    def assertFileLines(self, path, min, max):
+        self.assertNumLines(read_file(path), min, max)
+
     def assertRange(self, num, min, max, label="Value"):
         error = f"{label} {num} is not in range (min {min} and max {max})"
         self.assertGreaterEqual(num, min, error)
@@ -37,4 +40,3 @@ class DjangoTest(TestCase):
 
     # def test_django_test(self):
     #     self.assertTrue(True)
-

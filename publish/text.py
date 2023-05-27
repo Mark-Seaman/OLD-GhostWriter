@@ -1,6 +1,6 @@
+from os.path import exists
 from pathlib import Path
 from re import compile, findall, search, split, sub
-from os.path import exists
 
 
 def text_command(options):
@@ -132,6 +132,18 @@ def char_fix_files(directory):
         if x:
             changed.append(x)
     return text_join(changed)
+
+
+def include_files(text, dir=None):
+    pattern = r"\[\[(.+)\]\]"
+    matches = findall(pattern, text)
+    for filename in matches:
+        try:
+            include = (dir/filename).read_text()
+            text = text.replace(f"[[{filename}]]", include)
+        except FileNotFoundError:
+            print(f"File '{filename}' not found.")
+    return text
 
 
 def get_link(text):

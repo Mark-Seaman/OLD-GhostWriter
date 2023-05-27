@@ -7,32 +7,46 @@ from config.settings import BASE_DIR
 
 from publish.files import read_file, write_file
 
-def transform_prompt(text):
+
+def transform_prompt(prompt):
     openai.api_key = getenv("OPENAI_API_KEY")
     messages = [
-        dict(role='system', content='You are an assistant'),
-        dict(role='user', content=f'write a summary of this [content]\n\n{text}')
+        dict(role='user', content=prompt)
     ]
-    response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages, max_tokens=1000)
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo", messages=messages, max_tokens=1000)
     return response['choices'][0]['message']['content']
 
 
-def apply_prompt(out_file, prompt):
+def apply_prompt(outfile, prompt):
     text = transform_prompt(prompt)
-    write_file(pub_path(out_file), text)
+    write_file(outfile, text)
 
 
 def create_prompt(**kwargs):
+    prompt = ''
+
     context = kwargs.get('context')
+    if context:
+        prompt += read_file(pub_path(context))
+
     content = kwargs.get('content')
+    if content:
+        prompt += read_file(pub_path(content))
+
     task = kwargs.get('task')
     if task:
-        text = read_file(pub_path(context))
-        text += read_file(pub_path(content))
-        text += read_file(pub_path(task))
-        prompt = str(task)+'.ai'
-        write_file(prompt, text)
-        return text
+        prompt += read_file(pub_path(task))
+        return prompt
+
+
+def save_prompt(**kwargs):
+    ai = kwargs.get('ai')
+    if not Path(ai).exists():
+        prompt = create_prompt(**kwargs)
+        assert(prompt)
+        write_file(ai, prompt)
+        assert(Path(ai).exists())
 
 
 def do_gpt_task(args):
@@ -48,3 +62,14 @@ def do_gpt_task(args):
         apply_prompt(args[0], prompt)
     return f'Prompt: output={args[0]} task={args[1]} prompt={prompt} content,context={args[2:]}'
 
+def pub_ai(**kwargs):
+    pub = kwargs.get('pub')
+    chapter = kwargs.get('chapter')
+    doc = kwargs.get('doc')
+    path = pub_path(pub, chapter, doc)
+    path2 = str(path).replace('.md','.ai')
+    # editor = getenv("EDITOR")
+    # system(f'{editor} {path} {path2}')
+    print(f'chatgpt: {path} {path2}')
+    url = f'/{pub}/{chapter}/{doc}'
+    return url

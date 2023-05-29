@@ -90,7 +90,11 @@ header a:hover {
 }
 
 h1 {
-    color: dodgerblue;
+    color: #28a745;
+}
+
+h2 {
+    color: #007bff;
 }
 
 img {

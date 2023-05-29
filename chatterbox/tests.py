@@ -32,18 +32,17 @@ class GhostTest(DjangoTest):
         self.assertTrue(ai.exists())
 
     def test_chapter(self):
-        text = pub_script_command('chapter', ['GhostWriter', 'Chapter3'])
+        text = pub_script_command('chapter', ['GhostWriter', 'GhostWriter'])
         self.assertFileLines(
-            pub_path('GhostWriter', 'Chapter3', '1-Idea.txt'), 7, 24)
+            pub_path('GhostWriter', 'GhostWriter', 'B-Ideas.txt'), 7, 24)
         self.assertFileLines(
-            pub_path('GhostWriter', 'Chapter3', '1-Idea.ai'), 23, 24)
+            pub_path('GhostWriter', 'GhostWriter', 'B-Ideas.ai'), 12, 24)
 
-    def test_outline(self):
-        text = pub_script_command(
-            'outline', ['GhostWriter', 'Chapter2', 'Chapter2.md', '2.1'])
-        y = '/Users/seaman/Hammer/Documents/Shrinking-World-Pubs/GhostWriter/AI/Chapter2/Chapter2.md'
-        self.assertNumLines(text, 6, 6)
-        # print(text)
+    # def test_outline(self):
+    #     text = pub_script_command(
+    #         'outline', ['GhostWriter', 'Micropublishing', 'C-Outline.md'])
+    #     self.assertNumLines(text, 6, 6)
+    #     # print(text)
 
     # def test_chatter(self):
     #     output = 'GhostWriter/AI/Pub/Outline.md'

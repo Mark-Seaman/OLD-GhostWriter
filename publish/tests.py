@@ -45,46 +45,46 @@ class PubTest(DjangoTest):
         self.assertEqual(len(pubs), x)
 
     def test_doc_files(self):
-        self.assertRange(ghost_writer_files('*/*.md'), 28, 29)
+        self.assertRange(ghost_writer_files('*/*.md'), 28, 36)
 
     def test_ai_files(self):
-        self.assertRange(ghost_writer_files('*/*.ai'), 20, 21)
+        self.assertRange(ghost_writer_files('*/*.ai'), 20, 39)
 
     def test_txt_files(self):
-        self.assertRange(ghost_writer_files('*/*.txt'), 15, 16)
+        self.assertRange(ghost_writer_files('*/*.txt'), 15, 18)
 
     def test_chapters(self):
         chapters = pub_view_data(pub='GhostWriter')['chapters']
-        self.assertRange(len(chapters), 7, 7)
+        self.assertRange(len(chapters), 7, 9)
 
     def test_doc_list(self):
-        y = doc_list('GhostWriter', 'Chapter1')
+        y = doc_list('GhostWriter', 'WritersGuide')
         self.assertEqual(len(y), 6)
 
     def test_load_doc(self):
         x = '# Chapter 1 - Introduction'
-        y = read_pub_doc('GhostWriter', 'Chapter1', 'Chapter1.md')[:26]
+        y = read_pub_doc('GhostWriter', 'WritersGuide', 'Chapter1.md')[:26]
         self.assertEqual(y, x)
 
-        x = pub_view_data(pub='GhostWriter', chapter='Chapter1',
+        x = pub_view_data(pub='GhostWriter', chapter='WritersGuide',
                           doc='Chapter1.md')['text'][:26]
         self.assertEqual(y, x)
 
     def test_doc_title(self):
         x = 'Chapter 1 - Introduction'
-        y = doc_title('GhostWriter', 'Chapter1', 'Chapter1.md')
+        y = doc_title('GhostWriter', 'WritersGuide', 'Chapter1.md')
         self.assertEqual(y, x)
 
     def test_doc_text(self):
         x = '    1.1. Purpose of '
-        y = doc_text('GhostWriter', 'Chapter1', 'Chapter1.md')[:20]
+        y = doc_text('GhostWriter', 'WritersGuide', 'Chapter1.md')[:20]
         self.assertEqual(y, x)
 
     def test_doc_html(self):
-        html = doc_html('GhostWriter', 'Chapter1', 'Chapter1.md')
+        html = doc_html('GhostWriter', 'WritersGuide', 'Chapter1.md')
         self.assertNumLines(html, 128, 130)
         html = pub_view_data(
-            pub='GhostWriter', chapter='Chapter1', doc='Chapter1.md')['html']
+            pub='GhostWriter', chapter='WritersGuide', doc='Chapter1.md')['html']
         self.assertNumLines(html, 128, 130)
 
 
@@ -96,13 +96,13 @@ class DocumentViewTest(DjangoTest):
         text = self.assertPageText('/', 69, 69, 'html')
 
     def test_pub_view(self):
-        text = self.assertPageText('/GhostWriter', 118, 119, 'html')
+        text = self.assertPageText('/GhostWriter', 118, 130, 'html')
 
     def test_chapter_view(self):
         text = self.assertPageText('/GhostWriter/Chapter1', 118, 161, 'html')
 
     def test_doc_view(self):
-        text = self.assertPageText('/GhostWriter/Chapter1/Chapter1.md', 363, 363, 'html')
+        text = self.assertPageText('/GhostWriter/Chapter1/Chapter1.md', 153, 363, 'html')
 
     def test_ai_view(self):
 

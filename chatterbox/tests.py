@@ -5,7 +5,6 @@ from requests import get
 from publish.pub import pub_path
 from publish.text import text_lines
 
-# from .ai import do_gpt_task, transform_prompt
 from .pub_script import extract_outline, markdown_to_outline, pub_script_command
 from .tests_django import DjangoTest
 
@@ -61,6 +60,6 @@ class GhostTest(DjangoTest):
     #     # print(x)
     #     self.assertNumLines(x, 3, 3)
 
-    def test_outline_expander(self):
-        print(pub_script_command(
-            'expand', ['GhostWriter', 'Chapter2', 'Chapter2.md']))
+    # def test_outline_expander(self):
+    #     print(pub_script_command(
+    #         'expand', ['GhostWriter', 'Chapter2', 'Chapter2.md']))

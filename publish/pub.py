@@ -47,8 +47,9 @@ def pub_link(pub, chapter=None):
 
 def doc_link(pub, chapter, doc):
     url = f'/{pub}/{chapter}/{doc}'
-    title = doc_title(pub, chapter, doc)
-    return f'<a href="{url}">{title}</a>'
+    # title = doc_title(pub, chapter, doc)
+    # return f'<a href="{url}">{title}</a>'
+    return f'<a href="{url}">{doc[:-3]}</a>'
 
 
 def pub_path(pub=None, chapter=None, doc=None):

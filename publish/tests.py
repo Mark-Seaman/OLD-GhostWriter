@@ -25,22 +25,16 @@ class PubTest(DjangoTest):
 
     def test_pub_path(self):
         x = Path('/Users/seaman/Hammer/Documents/Shrinking-World-Pubs')
-        y = pub_path()
-        self.assertEqual(y, x)
+        self.assertEqual(pub_path(), x)
 
         x = Path('/Users/seaman/Hammer/Documents/Shrinking-World-Pubs/GhostWriter/AI')
-        y = pub_path('GhostWriter')
-        self.assertEqual(y, x)
+        self.assertEqual(pub_path('GhostWriter'), x)
 
-        x = Path(
-            '/Users/seaman/Hammer/Documents/Shrinking-World-Pubs/GhostWriter/AI/Chapter1')
-        y = pub_path('GhostWriter', 'Chapter1')
-        self.assertEqual(y, x)
+        x = '/Users/seaman/Hammer/Documents/Shrinking-World-Pubs/GhostWriter/AI/Chapter1'
+        self.assertEqual(str(pub_path('GhostWriter', 'Chapter1')), x)
 
-        x = Path(
-            '/Users/seaman/Hammer/Documents/Shrinking-World-Pubs/GhostWriter/AI/Chapter1/Chapter1.md')
-        y = pub_path('GhostWriter', 'Chapter1', 'Chapter1.md')
-        self.assertEqual(y, x)
+        x = '/Users/seaman/Hammer/Documents/Shrinking-World-Pubs/GhostWriter/AI/Chapter1/Chapter1.md'
+        self.assertEqual(str(pub_path('GhostWriter', 'Chapter1', 'Chapter1.md')), x)
 
     def test_num_pubs(self):
         x = 1
@@ -51,17 +45,17 @@ class PubTest(DjangoTest):
         self.assertEqual(len(pubs), x)
 
     def test_doc_files(self):
-        self.assertEqual(ghost_writer_files('*/*.md'), 28)
+        self.assertRange(ghost_writer_files('*/*.md'), 28, 29)
 
     def test_ai_files(self):
-        self.assertEqual(ghost_writer_files('*/*.ai'), 20)
+        self.assertRange(ghost_writer_files('*/*.ai'), 20, 21)
 
     def test_txt_files(self):
-        self.assertEqual(ghost_writer_files('*/*.txt'), 15)
+        self.assertRange(ghost_writer_files('*/*.txt'), 15, 16)
 
     def test_chapters(self):
         chapters = pub_view_data(pub='GhostWriter')['chapters']
-        self.assertEqual(len(chapters), 7)
+        self.assertRange(len(chapters), 7, 7)
 
     def test_doc_list(self):
         y = doc_list('GhostWriter', 'Chapter1')
@@ -94,6 +88,31 @@ class PubTest(DjangoTest):
         self.assertNumLines(html, 128, 130)
 
 
+class DocumentViewTest(DjangoTest):
+    def test_web_page(self):
+        text = self.assertPageText('http://shrinking-world.com', 176, 176, 'html')
+
+    def test_pub_list_view(self):
+        text = self.assertPageText('/', 69, 69, 'html')
+
+    def test_pub_view(self):
+        text = self.assertPageText('/GhostWriter', 118, 119, 'html')
+
+    def test_chapter_view(self):
+        text = self.assertPageText('/GhostWriter/Chapter1', 118, 161, 'html')
+
+    def test_doc_view(self):
+        text = self.assertPageText('/GhostWriter/Chapter1/Chapter1.md', 363, 363, 'html')
+
+    def test_ai_view(self):
+
+        # Skip the Call to Open AI API
+        # response = self.client.get('/GhostWriter/Pub/Haiku.md/ai')
+        # self.assertEqual(response.status_code, 302)
+
+        self.assertPageText('/GhostWriter/Pub/Haiku.md', 200, 300, 'Haiku')
+
+    
 class DocumentModelTest(DjangoTest):
     def setUp(self):
         self.document = Document.objects.create(

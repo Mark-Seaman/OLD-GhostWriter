@@ -5,7 +5,6 @@ from re import match
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 
-from chatterbox.ai import apply_prompt
 from publish.files import copy_files, read_file
 from publish.pub import pub_path
 from publish.text import include_files, text_join, text_lines
@@ -195,29 +194,29 @@ def pub_script_command(command, args):
         output = chatgpt_script(args)
     elif command == 'edit':
         output = edit_script(args)
-    elif command == 'expand':
-        output = 'not implemented'
+    # elif command == 'expand':
+    #     output = 'not implemented'
     elif command == 'files':
         output = files_script(args)
     elif command == 'outline':
         output = create_outline(args)
     elif command == 'publish':
         output = publish_script(args)
-    elif command == 'scriptor':
-        output = scriptor_script(args)
+    # elif command == 'scriptor':
+    #     output = scriptor_script(args)
     else:
         output = "Invalid command: {}".format(command) + usage
     return output
 
 
-def scriptor_script(args):
-    pub = args[0]
-    pub_root = pub_path(pub)
-    pub_script = read_file(pub_root / f'AI/Script/{pub}.ai')
-    lines = text_lines(pub_script)
-    text = f'pub_script_command: {pub}\n\n'
-    for c in lines:
-        if c.strip():
-            x = c.split(' ')
-            text += pub_script_command(x[0], x[1:])
-    return f'SCRIPTOR: \n\n{text}'
+# def scriptor_script(args):
+#     pub = args[0]
+#     pub_root = pub_path(pub)
+#     pub_script = read_file(pub_root / f'AI/Script/{pub}.ai')
+#     lines = text_lines(pub_script)
+#     text = f'pub_script_command: {pub}\n\n'
+#     for c in lines:
+#         if c.strip():
+#             x = c.split(' ')
+#             text += pub_script_command(x[0], x[1:])
+#     return f'SCRIPTOR: \n\n{text}'

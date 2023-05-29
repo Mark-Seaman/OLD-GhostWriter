@@ -1,9 +1,11 @@
 from os import getenv
+from pathlib import Path
 
 import openai
 
 from publish.pub import pub_path
 from publish.files import read_file, write_file
+from publish.text import include_files
 
 
 def transform_prompt(prompt):
@@ -29,8 +31,9 @@ def transform_prompt(prompt):
 
 def update_with_ai(doc_file):
     prompt_file = str(doc_file).replace('.md','.ai')
-    prompt = read_file(prompt_file)
+    prompt = include_files(read_file(prompt_file), doc_file.parent)
     text = f'# {doc_file.name}\n\n' + transform_prompt(prompt)
+    # text = f'# {doc_file.name}\n\n' + prompt
     write_file(doc_file, text)
 
 

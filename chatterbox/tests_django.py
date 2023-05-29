@@ -14,15 +14,25 @@ class DjangoTest(TestCase):
         self.assertGreaterEqual(num_files, min, error)
         self.assertLessEqual(num_files, max, error)
 
-    def assertLines(self, page, min, max):
-        response = get(page)
+    def assertPage(self, page):
+        if page.startswith('/'):
+            response = self.client.get(page)
+            text = response.content.decode('utf-8')
+        else:
+            response = get(page)
+            text = response.text
         self.assertEqual(response.status_code, 200)
-        self.assertNumLines(self, response.text, min, max)
+        return text
 
-    def assertText(self, page, text):
-        response = get(page)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(text, response.text)
+    def assertPageLines(self, page, min, max):
+        self.assertNumLines(self.assertPage(page), min, max)
+
+    def assertPageText(self, page, min, max, pattern=None):
+        text = self.assertPage(page)
+        self.assertNumLines(text, min, max)
+        if pattern:
+            self.assertIn(pattern, text)
+        return text
 
     def assertNumLines(self, text, min, max):
         lines = len(text_lines(text))

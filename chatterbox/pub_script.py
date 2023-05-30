@@ -31,7 +31,7 @@ def chapter_script(args):
     chapter_path = pub_path(pub, chapter)
     chapter_path.mkdir(parents=True, exist_ok=True)
     copy_files(pub_path(pub, 'Storyboard'), chapter_path)
-    return chapter_path
+    return str(chapter_path)
 
 
 def chatgpt_script(args):

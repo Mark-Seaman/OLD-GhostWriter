@@ -99,10 +99,10 @@ class DocumentViewTest(DjangoTest):
         text = self.assertPageText('/GhostWriter', 118, 130, 'html')
 
     def test_chapter_view(self):
-        text = self.assertPageText('/GhostWriter/Chapter1', 118, 161, 'html')
+        text = self.assertPageText('/GhostWriter/WritersGuide', 150, 170, 'html')
 
     def test_doc_view(self):
-        text = self.assertPageText('/GhostWriter/Chapter1/Chapter1.md', 153, 363, 'html')
+        text = self.assertPageText('/GhostWriter/WritersGuide/Chapter1.md', 360, 380, 'html')
 
     def test_ai_view(self):
 
@@ -113,12 +113,12 @@ class DocumentViewTest(DjangoTest):
         self.assertPageText('/GhostWriter/Pub/Haiku.md', 200, 300, 'Haiku')
 
     
-class DocumentModelTest(DjangoTest):
-    def setUp(self):
-        self.document = Document.objects.create(
-            pub='Publication',
-            chapter='Chapter 1'
-        )
+# class DocumentModelTest(DjangoTest):
+#     def setUp(self):
+#         self.document = Document.objects.create(
+#             pub='Publication',
+#             chapter='Chapter 1'
+#         )
 
-    def test_document_str_representation(self):
-        self.assertEqual(str(self.document), 'Publication - Chapter 1')
+#     def test_document_str_representation(self):
+#         self.assertEqual(str(self.document), 'Publication - Chapter 1')

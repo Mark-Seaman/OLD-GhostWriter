@@ -36,7 +36,7 @@ class DjangoTest(TestCase):
 
     def assertNumLines(self, text, min, max):
         lines = len(text_lines(text))
-        self.assertRange(lines, min, max, label=f"Lines in {text}")
+        self.assertRange(lines, min, max, label=f"Lines in text")
 
     def assertFileLines(self, path, min, max):
         self.assertNumLines(read_file(path), min, max)

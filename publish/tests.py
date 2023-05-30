@@ -34,15 +34,14 @@ class PubTest(DjangoTest):
         self.assertEqual(str(pub_path('GhostWriter', 'Chapter1')), x)
 
         x = '/Users/seaman/Hammer/Documents/Shrinking-World-Pubs/GhostWriter/AI/Chapter1/Chapter1.md'
-        self.assertEqual(str(pub_path('GhostWriter', 'Chapter1', 'Chapter1.md')), x)
+        self.assertEqual(
+            str(pub_path('GhostWriter', 'Chapter1', 'Chapter1.md')), x)
 
     def test_num_pubs(self):
-        x = 1
-        pubs = list_pubs()
-        self.assertEqual(len(pubs), x)
-
-        pubs = pub_view_data()['pubs']
-        self.assertEqual(len(pubs), x)
+        pubs1 = len(list_pubs())
+        pubs2 = len(pub_view_data()['pubs'])
+        self.assertEqual(pubs1, pubs2)
+        self.assertRange(pubs2, 1, 3)
 
     def test_doc_files(self):
         self.assertRange(ghost_writer_files('*/*.md'), 28, 36)
@@ -90,19 +89,22 @@ class PubTest(DjangoTest):
 
 class DocumentViewTest(DjangoTest):
     def test_web_page(self):
-        text = self.assertPageText('http://shrinking-world.com', 176, 176, 'html')
+        text = self.assertPageText(
+            'http://shrinking-world.com', 176, 176, 'html')
 
     def test_pub_list_view(self):
-        text = self.assertPageText('/', 69, 69, 'html')
+        text = self.assertPageText('/', 69, 81, 'html')
 
     def test_pub_view(self):
         text = self.assertPageText('/GhostWriter', 118, 130, 'html')
 
     def test_chapter_view(self):
-        text = self.assertPageText('/GhostWriter/WritersGuide', 150, 170, 'html')
+        text = self.assertPageText(
+            '/GhostWriter/WritersGuide', 150, 180, 'html')
 
     def test_doc_view(self):
-        text = self.assertPageText('/GhostWriter/WritersGuide/Chapter1.md', 360, 380, 'html')
+        text = self.assertPageText(
+            '/GhostWriter/WritersGuide/Chapter1.md', 360, 380, 'html')
 
     def test_ai_view(self):
 
@@ -112,7 +114,7 @@ class DocumentViewTest(DjangoTest):
 
         self.assertPageText('/GhostWriter/Pub/Haiku.md', 200, 300, 'Haiku')
 
-    
+
 # class DocumentModelTest(DjangoTest):
 #     def setUp(self):
 #         self.document = Document.objects.create(

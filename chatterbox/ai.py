@@ -15,7 +15,8 @@ def transform_prompt(prompt):
         dict(role='user', content=prompt)
     ]
 
-    while True:
+    # Try up to ten times to transfer
+    for i in range(10):
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo", 
             messages=conversation, 
@@ -27,6 +28,9 @@ def transform_prompt(prompt):
         finish_reason = response['choices'][0]['finish_reason']
         if finish_reason != 'length':
             return ''.join([m['content'] for m in conversation if m['role']=='assistant'])
+        
+    # Return the failed conversation
+    return ''.join([m['content'] for m in conversation if m['role']=='assistant'])
 
 
 def update_with_ai(doc_file):

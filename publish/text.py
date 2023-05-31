@@ -140,7 +140,7 @@ def include_files(text, dir=None):
     for filename in matches:
         try:
             include = (dir/filename).read_text()
-            text = text.replace(f"[[{filename}]]", include)
+            text = text.replace(f"[[{filename}]]", f'\n\n{include}\n\n')
         except FileNotFoundError:
             print(f"File '{filename}' not found.")
     return text

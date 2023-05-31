@@ -104,7 +104,10 @@ def pub_edit(**kwargs):
     path2 = str(path).replace('.md','.txt')
     path3 = str(path).replace('.md','.ai')
     editor = getenv("EDITOR")
-    system(f'{editor} {path} {path2} {path3}')
+    # TODO Windows compatible editor
+    command = f'"{editor}" "{path}" "{path2}" "{path3}"'
+    print(command)
+    system(command)
     url = f'/{kwargs["pub"]}/{kwargs["chapter"]}/{kwargs["doc"]}'
     return url
 

@@ -63,8 +63,8 @@ def edit_script(args):
         return 'usage: pub-name chapter-name'
     path = pub_path(args[0], args[1])
     editor = getenv("EDITOR")
-    system(f'{editor} {path}')
-    return f'edit {editor} {path}'
+    system(f'"{editor}" -w "{path}"')
+    return f'edit "{editor}" "{path}"'
 
 
 def extract_outline(text, section_number):

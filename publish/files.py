@@ -3,7 +3,8 @@ from genericpath import getmtime
 from glob import glob
 from io import StringIO
 from json import dump, loads
-from os import W_OK, access, getcwd, listdir, mkdir, remove, walk
+import os
+from os import W_OK, access, getcwd, listdir, remove, walk
 from os.path import dirname, exists, isdir, isfile, join
 from pathlib import Path
 from re import search
@@ -41,12 +42,12 @@ def count_files(directory):
 
 # Create the directory if needed
 def create_directory(path):
-    if path == '' or path == '/':
-        return
-    create_directory(dirname(path))
-    if not exists(path):
-        mkdir(path)
-
+    """Handles creating any number of directories when necessary"""
+    # Converts to absolute path if relative
+    path = Path(path).resolve()
+    # Create the directory if it doesn't exist, ignoring errors if it already exists
+    os.makedirs(path, exist_ok=True)
+    return path
 
 # Delete a relative path name
 def delete_file(filename):

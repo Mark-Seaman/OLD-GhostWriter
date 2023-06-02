@@ -27,7 +27,7 @@ class GhostTest(DjangoTest):
         self.assertFiles(directory, 14, 40)
 
     def test_project(self):
-        pub_script_command('project', ['GhostWriter', 'ghost'])
+        pub_script_command('project', ['GhostWriter'])
         js = (pub_path('GhostWriter').parent)/'pub.json'
         self.assertFileLines(js, 8, 8)
 
@@ -37,6 +37,9 @@ class GhostTest(DjangoTest):
             pub_path('GhostWriter', 'GhostWriter', 'B-Ideas.txt'), 7, 24)
         self.assertFileLines(
             pub_path('GhostWriter', 'GhostWriter', 'B-Ideas.ai'), 12, 24)
+
+    def test_doc(self):
+        pub_script_command('doc', ['GhostWriter', 'GhostWriter', 'B-Ideas.md'], False)
 
     # def test_outline(self):
     #     text = pub_script_command(

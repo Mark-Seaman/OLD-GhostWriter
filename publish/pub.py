@@ -103,9 +103,10 @@ def pub_edit(**kwargs):
     path = pub_path(pub, chapter, doc)
     path2 = str(path).replace('.md','.txt')
     path3 = str(path).replace('.md','.ai')
-    editor = getenv("EDITOR")
+    editor = getenv("EDITOR").replace(' -w', '')
+    # editor='/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code'
     # TODO Windows compatible editor
-    command = f'"{editor}" "{path}" "{path2}" "{path3}"'
+    command = f'"{editor}" -w "{path}" "{path2}" "{path3}"'
     print(command)
     system(command)
     url = f'/{kwargs["pub"]}/{kwargs["chapter"]}/{kwargs["doc"]}'

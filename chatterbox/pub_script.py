@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand
 from django.template.loader import render_to_string
 
 from publish.files import copy_files, create_directory
-from publish.pub import pub_path
+from publish.pub import pub_edit, pub_path
 from publish.text import  text_join
 
 
@@ -18,8 +18,8 @@ def chapter_script(args):
     pub, chapter = args
     chapter_path = pub_path(pub, chapter)
     create_directory(chapter_path)
-    copy_files(pub_path(pub, 'Storyboard'), chapter_path)
-    return str(chapter_path)
+    # copy_files(pub_path(pub, 'Storyboard'), chapter_path)
+    return f'chapter ({chapter_path})'
 
 
 def create_outline(args):
@@ -30,15 +30,25 @@ def create_outline(args):
     return text
 
 
-def edit_script(args):
-    # Function to handle "edit" command
-    # ...
-    if not args:
-        return 'usage: pub-name chapter-name'
-    path = pub_path(args[0], args[1])
-    editor = getenv("EDITOR")
-    system(f'"{editor}" -w "{path}"')
-    return f'edit "{editor}" "{path}"'
+def doc_script(args, edit=True):
+    if not args[2:]:
+        return 'usage: doc pub-name chapter-name doc-name'
+    pub, chapter, doc = args
+    path = pub_path(pub, chapter, doc)
+    if edit:
+        pub_edit(pub=pub, chapter=chapter, doc=doc)
+    return f'doc({path})'
+
+
+# def edit_script(args):
+#     # Function to handle "edit" command
+#     # ...
+#     if not args:
+#         return 'usage: pub edit pub-name'
+#     path = pub_path(args[0])
+#     editor = getenv("EDITOR")
+#     system(f'"{editor}" -w "{path}"')
+#     return f'edit "{editor}" "{path}"'
 
 
 def extract_outline(text, section_number):
@@ -87,7 +97,8 @@ def markdown_to_outline(text):
 
 
 def project_script(args):
-    def make_json(pub_dir, pub_name):
+    def make_json(pub_dir):
+        pub_name = pub_dir
         pub_root = pub_path() / pub_dir
         js = pub_root / f'pub.json'
         if not js.exists():
@@ -96,9 +107,9 @@ def project_script(args):
             js.write_text(json)
 
     if not args:
-        return 'usage: project pub-dir pub-name'
-    make_json(args[0], args[1])
-    return f'project (pub_dir={args[0]}, pub_name={args[1]})'
+        return 'usage: project pub-dir'
+    make_json(args[0])
+    return f'project (pub_dir={args[0]})'
 
 
 
@@ -134,13 +145,15 @@ usage:
 '''
 
 
-def pub_script_command(command, args):
+def pub_script_command(command, args, edit=True):
     if command == 'project':
         output = project_script(args)
     elif command == 'chapter':
         output = chapter_script(args)
-    elif command == 'edit':
-        output = edit_script(args)
+    elif command == 'doc':
+        output = doc_script(args, edit)
+    # elif command == 'edit':
+    #     output = edit_script(args)
     # elif command == 'expand':
     #     output = 'not implemented'
     elif command == 'files':

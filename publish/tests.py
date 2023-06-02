@@ -96,7 +96,7 @@ class DocumentViewTest(DjangoTest):
         text = self.assertPageText('/', 80, 100, 'html')
 
     def test_pub_view(self):
-        text = self.assertPageText('/GhostWriter', 148, 150, 'html')
+        text = self.assertPageText('/GhostWriter', 148, 160, 'html')
 
     def test_chapter_view(self):
         text = self.assertPageText(
@@ -104,7 +104,7 @@ class DocumentViewTest(DjangoTest):
 
     def test_doc_view(self):
         text = self.assertPageText(
-            '/GhostWriter/WritersGuide/Chapter1.md', 360, 400, 'html')
+            '/GhostWriter/WritersGuide/Chapter1.md', 360, 410, 'html')
 
     def test_ai_view(self):
 

@@ -3,23 +3,11 @@ from pathlib import Path
 from re import match
 
 from django.core.management.base import BaseCommand
-from django.utils.text import slugify
+from django.template.loader import render_to_string
 
-from publish.files import copy_files, read_file
+from publish.files import copy_files, create_directory
 from publish.pub import pub_path
-from publish.text import include_files, text_join, text_lines
-
-'''
-Writer Script
-
-Examples:
-- project SoftwareEngineering
-- chapter SoftwareEngineering 08
-- gpt  SoftwareEngineering 08 Outline.md
-- publish SoftwareEngineering 08
-- edit SoftwareEngineering 08
-
-'''
+from publish.text import  text_join
 
 
 def chapter_script(args):
@@ -29,23 +17,9 @@ def chapter_script(args):
         return 'usage: chapter pub-name chapter-name'
     pub, chapter = args
     chapter_path = pub_path(pub, chapter)
-    chapter_path.mkdir(parents=True, exist_ok=True)
+    create_directory(chapter_path)
     copy_files(pub_path(pub, 'Storyboard'), chapter_path)
     return str(chapter_path)
-
-
-def chatgpt_script(args):
-    if args[2:]:
-        out_file = pub_path(args[0], args[1], args[2])
-        task = str(out_file).replace('.md', '.ai')
-        prompt = read_file(task)
-        prompt = include_files(prompt, out_file.parent)
-        # print(prompt)
-        apply_prompt(out_file, prompt)
-        edit_script(['edit'] + args)
-        return f'created {out_file}'
-    else:
-        return 'usage: pub gpt GhostWriter Chapter1 Outline.md'
 
 
 def create_outline(args):
@@ -112,46 +86,20 @@ def markdown_to_outline(text):
     return outline
 
 
-pub_js = '''
-{
-    "name": "",
-    "site_title": "",
-    "site_subtitle": "",
-    "domain": "https://shrinking-world.com",
-    "url": "/analytics",
-    "title": "",
-    "author": "Mark Seaman",
-    "description": "",
-    "css": "/static/css/book.css",
-    "doc_path": "Documents/Shrinking-World-Pubs//Pub",
-    "image_path": "/static/images/Shrinking-World-Pubs/",
-    "cover_image": "/static/images/Shrinking-World-Pubs//Cover.png",
-    "cover_title": false,
-    "pub_type": "private",
-    "menu": "static/js/nav_blog.json",
-    "auto_contents": false,
-    "auto_index": true,
-    "simple_index": true
-}
-'''
-
-
 def project_script(args):
-    def make_json(pub_root, pub_name):
-        js = pub_root / f'{pub_name}.json'
+    def make_json(pub_dir, pub_name):
+        pub_root = pub_path() / pub_dir
+        js = pub_root / f'pub.json'
         if not js.exists():
-            js.write_text(pub_js)
+            data = dict(pub_name=pub_name, pub_dir=pub_dir, tag_line='AI tools for Authors')
+            json = render_to_string('pub_script/pub.json', data)
+            js.write_text(json)
 
     if not args:
         return 'usage: project pub-dir pub-name'
-    pub_root = pub_path(args[0])
+    make_json(args[0], args[1])
+    return f'project (pub_dir={args[0]}, pub_name={args[1]})'
 
-    (pub_root/'AI').mkdir(parents=True, exist_ok=True)
-    (pub_root/'Pub').mkdir(parents=True, exist_ok=True)
-    (pub_root/'Images').mkdir(parents=True, exist_ok=True)
-
-    make_json(pub_path(args[0]), args[1])
-    return str(pub_root)
 
 
 def publish_script(args):
@@ -169,18 +117,19 @@ def publish_script(args):
 usage = '''
 
 usage:
-    project GhostWriter
+    project GhostWriter writer
     chapter GhostWriter Chapter1
-    gpt GhostWriter Chapter1 Outline.md
-    publish GhostWriter Chapter1 FinalVerson.md
+    doc GhostWriter Chapter1 A-Outline.md
     edit GhostWriter Chapter1
+    publish GhostWriter Chapter1 FinalVerson.md
+
     files GhostWriter Chapter1
     ai GhostWriter Chapter1 Outline1
     md GhostWriter Chapter1 Outline1
     txt GhostWriter Chapter1 Outline1
-    outline GhostWriter Chapter1 Outline1
-    expand GhostWriter Chapter1 Outline1
-    draft GhostWriter Chapter1 Outline1
+
+    # outline GhostWriter Chapter1 Outline1
+    # expand GhostWriter Chapter1 Outline1
 
 '''
 
@@ -190,8 +139,6 @@ def pub_script_command(command, args):
         output = project_script(args)
     elif command == 'chapter':
         output = chapter_script(args)
-    # elif command == 'gpt':
-    #     output = chatgpt_script(args)
     elif command == 'edit':
         output = edit_script(args)
     # elif command == 'expand':
@@ -202,21 +149,7 @@ def pub_script_command(command, args):
         output = create_outline(args)
     elif command == 'publish':
         output = publish_script(args)
-    # elif command == 'scriptor':
-    #     output = scriptor_script(args)
     else:
         output = "Invalid command: {}".format(command) + usage
     return output
 
-
-# def scriptor_script(args):
-#     pub = args[0]
-#     pub_root = pub_path(pub)
-#     pub_script = read_file(pub_root / f'AI/Script/{pub}.ai')
-#     lines = text_lines(pub_script)
-#     text = f'pub_script_command: {pub}\n\n'
-#     for c in lines:
-#         if c.strip():
-#             x = c.split(' ')
-#             text += pub_script_command(x[0], x[1:])
-#     return f'SCRIPTOR: \n\n{text}'

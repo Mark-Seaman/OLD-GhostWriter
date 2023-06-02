@@ -42,12 +42,8 @@ def count_files(directory):
 
 # Create the directory if needed
 def create_directory(path):
-    """Handles creating any number of directories when necessary"""
-    # Converts to absolute path if relative
-    path = Path(path).resolve()
-    # Create the directory if it doesn't exist, ignoring errors if it already exists
-    os.makedirs(path, exist_ok=True)
-    return path
+    Path(path).mkdir(parents=True, exist_ok=True)
+    
 
 # Delete a relative path name
 def delete_file(filename):

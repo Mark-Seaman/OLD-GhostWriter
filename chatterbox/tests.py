@@ -1,6 +1,7 @@
 from pathlib import Path
 from django.test import TestCase
 from requests import get
+from publish.files import create_directory
 
 from publish.pub import pub_path
 from publish.text import text_lines
@@ -14,6 +15,11 @@ class GhostTest(DjangoTest):
     def test_runs(self):
         self.assertEqual(3, 3)
 
+    def test_create_directory(self):
+        x = '/Users/seaman/Hammer/Documents/Shrinking-World-Pubs/GhostWriter/AI/test/test/delete-me'
+        create_directory(x)
+        self.assertTrue(Path(x).exists())
+
     def test_pub_files(self):
         directory = pub_path('GhostWriter')
         self.assertEqual(str(
@@ -21,18 +27,12 @@ class GhostTest(DjangoTest):
         self.assertFiles(directory, 14, 40)
 
     def test_project(self):
-        x = pub_script_command('project', ['GhostWriter', 'ghost'])
-        self.assertEqual(
-            x, '/Users/seaman/Hammer/Documents/Shrinking-World-Pubs/GhostWriter/AI')
-        pub = pub_path('GhostWriter', 'Pub')
-        self.assertTrue(pub.exists())
-        js = pub_path('GhostWriter')/'ghost.json'
-        self.assertTrue(js.exists())
-        ai = pub_path('GhostWriter')/'AI'
-        self.assertTrue(ai.exists())
+        pub_script_command('project', ['GhostWriter', 'ghost'])
+        js = (pub_path('GhostWriter').parent)/'pub.json'
+        self.assertFileLines(js, 8, 8)
 
     def test_chapter(self):
-        text = pub_script_command('chapter', ['GhostWriter', 'GhostWriter'])
+        pub_script_command('chapter', ['GhostWriter', 'GhostWriter'])
         self.assertFileLines(
             pub_path('GhostWriter', 'GhostWriter', 'B-Ideas.txt'), 7, 24)
         self.assertFileLines(

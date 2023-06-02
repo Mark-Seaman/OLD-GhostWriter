@@ -1,0 +1,8 @@
+{
+    "name": "{{ pub_name }}",
+    "site_title": "{{ pub_dir }}",
+    "site_subtitle": "{{ tag_line }}",
+    "url": "/{{ pub_dir }}",
+    "author": "Mark Seaman",
+    "description": "How to produce higher quality and quantity work."
+}

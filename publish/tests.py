@@ -90,7 +90,7 @@ class PubTest(DjangoTest):
 class DocumentViewTest(DjangoTest):
     def test_web_page(self):
         text = self.assertPageText(
-            'http://shrinking-world.com', 176, 176, 'html')
+            'http://shrinking-world.com', 160, 176, 'html')
 
     def test_pub_list_view(self):
         text = self.assertPageText('/', 69, 81, 'html')

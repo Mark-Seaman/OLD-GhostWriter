@@ -190,8 +190,8 @@ def pub_script_command(command, args):
         output = project_script(args)
     elif command == 'chapter':
         output = chapter_script(args)
-    elif command == 'gpt':
-        output = chatgpt_script(args)
+    # elif command == 'gpt':
+    #     output = chatgpt_script(args)
     elif command == 'edit':
         output = edit_script(args)
     # elif command == 'expand':

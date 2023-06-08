@@ -4,13 +4,15 @@
 # ------------
 # VARS
 
-p="/Users/seaman/Hammer"
+export p="/Users/seaman/GhostWriter"
+export pub="/Users/seaman/SHRINKING-WORLD-PUBS"
 
 
 # ------------
 # ALIASES
 
 # Pub Script
+alias pub="d $pub"
 alias project='pm pub project'
 alias chapter='pm pub chapter'
 alias create='pm pub create'

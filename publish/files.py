@@ -3,7 +3,6 @@ from genericpath import getmtime
 from glob import glob
 from io import StringIO
 from json import dump, loads
-import os
 from os import W_OK, access, getcwd, listdir, remove, walk
 from os.path import dirname, exists, isdir, isfile, join
 from pathlib import Path
@@ -27,6 +26,7 @@ def content_word_summary(path):
     return text_join(counts)
 
 
+# Copy a directory of files
 def copy_files(source, dest):
     dest = Path(dest)
     dest.mkdir(parents=True, exist_ok=True)
@@ -42,8 +42,9 @@ def count_files(directory):
 
 # Create the directory if needed
 def create_directory(path):
+    # makedirs(Path(path).resolve(), exist_ok=True)
     Path(path).mkdir(parents=True, exist_ok=True)
-    
+
 
 # Delete a relative path name
 def delete_file(filename):
@@ -132,7 +133,7 @@ def line_exclude(word, text):
     return '\n'.join([x for x in text.split('\n') if not word in x])
 
 
-def line_count(path):
+def line_count_file(path):
     '''Read a file and count the lines of text'''
     return len(text_lines(read_file(path)))
 
@@ -202,9 +203,18 @@ def not_excluded(path, exclude):
 
 
 def read_csv_file(path):
-    assert exists(path)
-    with open(path) as f:
-        return [row for row in reader(f)]
+    csv_data = Path(path).read_text()
+    return list(reader(csv_data.splitlines()))
+
+
+def read_csv_text(text):
+    # Use Pandas
+    import pandas as pd
+    from io import StringIO
+
+    df = pd.read_csv(StringIO(text), header=None)
+    df[2] = df[2].fillna(df[1])
+    return df.values.tolist()
 
 
 # Return the text from the file
@@ -258,6 +268,13 @@ def recursive_files(path='.', suffix='', exclude=None):
 def table_data(csv_data):
     return list(reader(StringIO(csv_data)))
 
+    # WITH PANDAS
+    # import pandas as pd
+    # from io import StringIO
+    # df = pd.read_csv(StringIO(text), header=None)
+    # df[2] = df[2].fillna(df[1])  # Fill Column 2 when missing
+    # return df.values.tolist()
+
 
 # Get a file list sorted by time (recent last)
 def time_sort_file(d):
@@ -293,7 +310,7 @@ def word_count_in_directory(path):
 
 # Write data to a CSV file
 def write_csv_file(path, table):
-    assert (exists(dirname(path)))
+    assert(exists(dirname(path)))
     with open(path, 'w', newline='') as f:
         writer(f).writerows(table)
 
@@ -309,24 +326,3 @@ def write_file(filename, text, append=None):
 def write_json(filename, data):
     with open(filename, "w") as f:
         dump(data, f, indent=4)
-
-
-# # Print a flat list
-# def print_list(lst):
-#     for f in lst:
-#         print (f)
-#
-
-# # Print a list two levels deep
-# def print_list2(lst):
-#     for v in lst:
-#         for f in v:
-#             print (f,)
-#         print ()
-
-
-# # Read the input as lines of text
-# def read_input():
-#     text = stdin.read().split('\n')
-#     return filter(lambda x: len(x.rstrip()) > 0, text)
-#

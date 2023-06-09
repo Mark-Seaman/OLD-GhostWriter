@@ -3,7 +3,7 @@ from pathlib import Path
 
 import openai
 
-from publish.pub import pub_path
+from chatterbox.pub_dev import pub_path
 from publish.files import read_file, write_file
 from publish.text import include_files
 

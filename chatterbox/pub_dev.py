@@ -2,8 +2,8 @@ from os import getenv, system
 from pathlib import Path
 from markdown import markdown
 
-from .document import title
-from .text import text_join, text_lines
+from publish.document import title
+from publish.text import text_join, text_lines
 
 
 def doc_html(pub, chapter, doc):
@@ -31,7 +31,13 @@ def doc_list(pub, chapter):
 
 def chapter_list(pub):
     path = pub_path(pub)
-    return [pub_link(pub, chapter.name) for chapter in path.iterdir() if chapter.is_dir()]
+    x = []
+    chapters = path.iterdir()
+    for chapter in chapters:
+        if chapter.is_dir():
+            x.append(pub_link(pub, chapter.name))
+    return x
+    # return [pub_link(pub, chapter.name) for chapter in path.iterdir() if chapter.is_dir()]
 
 
 def pub_link(pub, chapter=None):

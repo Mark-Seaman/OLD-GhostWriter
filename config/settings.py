@@ -53,7 +53,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'publish.urls'
+ROOT_URLCONF = 'chatterbox.urls'
 
 TEMPLATES = [
     {

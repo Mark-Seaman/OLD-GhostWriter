@@ -1,6 +1,6 @@
 from django.urls import path
 
-from publish.views import  ApplyAiView, DocumentEditView, DocumentView
+from chatterbox.views import  ApplyAiView, DocumentEditView, DocumentView
 
 urlpatterns = [
 

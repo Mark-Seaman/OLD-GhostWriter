@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand
 from django.template.loader import render_to_string
 
 from publish.files import copy_files, create_directory
-from publish.pub import pub_edit, pub_path
+from chatterbox.pub_dev import pub_edit, pub_path
 from publish.text import  text_join
 
 

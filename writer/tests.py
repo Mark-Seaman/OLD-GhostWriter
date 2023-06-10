@@ -1,18 +1,11 @@
-from os import getenv
 from pathlib import Path
 
-from django.test import TestCase
-from requests import get
-
 from publish.files import create_directory
-from publish.text import text_lines
 
-from .pub_dev import (chapter_list, doc_html, doc_list, doc_text,
-                      doc_title, list_pubs, pub_path, pub_view_data,
-                      read_pub_doc)
+from .pub_dev import (doc_html, doc_list, doc_text, doc_title, list_pubs,
+                      pub_path, pub_view_data, read_pub_doc)
 from .tests_django import DjangoTest
-from .writer_script import (extract_outline, markdown_to_outline, pub_path,
-                            pub_script_command)
+from .writer_script import pub_path, pub_script_command
 
 
 class GhostTest(DjangoTest):

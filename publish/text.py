@@ -1,6 +1,6 @@
-from os.path import exists
 from pathlib import Path
 from re import compile, findall, search, split, sub
+from os.path import exists
 
 
 def text_command(options):
@@ -41,19 +41,33 @@ def text_help(args=None):
 # ------------------------------
 # Functions
 
+def char_fix(text):
+    text2 = (
+        text.replace(" ", " ")
+        .replace("’", "'")
+        .replace("“", '"')
+        .replace("‘", "'")
+        .replace("&#x27;", "'")
+    )
+    # text2 = sub("\[.\]", "", text2)
+    return text2
 
-def as_text(query):
-    return text_join([str(x) for x in query])
+
+def char_fix_file(path):
+    text = Path(path).read_text()
+    text2 = char_fix(text)
+    if text != text2:
+        Path(path).write_text(text2)
+        return f"Rewrite {path}\n"
 
 
-def capture_ideas(options):
-    f = "Documents/info/Index.md"
-    with open(f, "a") as x:
-        x.write("* " + " ".join(options["command"][1:]) + "\n\n")
-
-
-def count_lines(text):
-    return len(text_lines(text))
+def char_fix_files(directory):
+    changed = ["Files Changed"]
+    for p in Path(directory).rglob("*.md"):
+        x = char_fix_file(p)
+        if x:
+            changed.append(x)
+    return text_join(changed)
 
 
 def delete_lines(text, match_pattern):
@@ -105,33 +119,10 @@ def first_line(text):
         return text_lines(text)[0].strip()
 
 
-def char_fix(text):
-    text2 = (
-        text.replace(" ", " ")
-        .replace("’", "'")
-        .replace("“", '"')
-        .replace("‘", "'")
-        .replace("&#x27;", "'")
-    )
-    # text2 = sub("\[.\]", "", text2)
-    return text2
-
-
-def char_fix_file(path):
-    text = Path(path).read_text()
-    text2 = char_fix(text)
-    if text != text2:
-        Path(path).write_text(text2)
-        return f"Rewrite {path}\n"
-
-
-def char_fix_files(directory):
-    changed = ["Files Changed"]
-    for p in Path(directory).rglob("*.md"):
-        x = char_fix_file(p)
-        if x:
-            changed.append(x)
-    return text_join(changed)
+def get_link(text):
+    link = find_markdown_links(text)
+    if link:
+        return link[0][0], link[0][1]
 
 
 def include_files(text, dir=None):
@@ -146,10 +137,8 @@ def include_files(text, dir=None):
     return text
 
 
-def get_link(text):
-    link = find_markdown_links(text)
-    if link:
-        return link[0][0], link[0][1]
+def line_count(text):
+    return len(text_lines(text))
 
 
 def markdown_list_links(host, lines):
@@ -304,7 +293,7 @@ def transform_text(text, pattern, replacement):
 
 
 def words(text):
-    return split("\s+", text)
+    return split(r"\s+", text.strip())
 
 
 def word_count(text):

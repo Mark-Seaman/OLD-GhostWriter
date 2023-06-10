@@ -1,9 +1,10 @@
 from os import getenv, system
 from pathlib import Path
+
 from markdown import markdown
 
-from .document import title
-from .text import text_join, text_lines
+from publish.document import title
+from publish.text import text_join, text_lines
 
 
 def doc_html(pub, chapter, doc):
@@ -31,7 +32,13 @@ def doc_list(pub, chapter):
 
 def chapter_list(pub):
     path = pub_path(pub)
-    return [pub_link(pub, chapter.name) for chapter in path.iterdir() if chapter.is_dir()]
+    x = []
+    chapters = path.iterdir()
+    for chapter in chapters:
+        if chapter.is_dir():
+            x.append(pub_link(pub, chapter.name))
+    return x
+    # return [pub_link(pub, chapter.name) for chapter in path.iterdir() if chapter.is_dir()]
 
 
 def pub_link(pub, chapter=None):
@@ -65,12 +72,14 @@ def pub_path(pub=None, chapter=None, doc=None):
         path = path
     return path
 
+
 def doc_ai(pub, chapter, doc):
     doc = doc.replace('.md', '.ai')
     path = pub_path(pub, chapter, doc)
     if path.exists():
         return markdown(path.read_text())
-    
+
+
 def doc_human(pub, chapter, doc):
     doc = doc.replace('.md', '.txt')
     path = pub_path(pub, chapter, doc)
@@ -101,8 +110,8 @@ def pub_edit(**kwargs):
     chapter = kwargs.get('chapter')
     doc = kwargs.get('doc')
     path = pub_path(pub, chapter, doc)
-    path2 = str(path).replace('.md','.txt')
-    path3 = str(path).replace('.md','.ai')
+    path2 = str(path).replace('.md', '.txt')
+    path3 = str(path).replace('.md', '.ai')
     editor = getenv("EDITOR").replace(' -w', '')
     # editor='/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code'
     # TODO Windows compatible editor
@@ -118,5 +127,3 @@ def read_pub_doc(pub, chapter, doc):
     if not path.exists():
         return f"FILE NOT FOUND: {path}"
     return path.read_text()
-
-

@@ -3,7 +3,6 @@ from pathlib import Path
 
 import openai
 
-from publish.pub import pub_path
 from publish.files import read_file, write_file
 from publish.text import include_files
 
@@ -18,23 +17,23 @@ def transform_prompt(prompt):
     # Try up to ten times to transfer
     for i in range(10):
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo", 
-            messages=conversation, 
+            model="gpt-3.5-turbo",
+            messages=conversation,
             max_tokens=1000)
-    
+
         message = response['choices'][0]['message']['content']
         conversation.append({"role": "assistant", "content": message})
 
         finish_reason = response['choices'][0]['finish_reason']
         if finish_reason != 'length':
-            return ''.join([m['content'] for m in conversation if m['role']=='assistant'])
-        
+            return ''.join([m['content'] for m in conversation if m['role'] == 'assistant'])
+
     # Return the failed conversation
-    return ''.join([m['content'] for m in conversation if m['role']=='assistant'])
+    return ''.join([m['content'] for m in conversation if m['role'] == 'assistant'])
 
 
 def update_with_ai(doc_file):
-    prompt_file = str(doc_file).replace('.md','.ai')
+    prompt_file = str(doc_file).replace('.md', '.ai')
     prompt = include_files(read_file(prompt_file), doc_file.parent)
     text = f'# {doc_file.name}\n\n' + transform_prompt(prompt)
     # text = f'# {doc_file.name}\n\n' + prompt

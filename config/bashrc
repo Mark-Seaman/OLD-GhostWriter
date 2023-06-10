@@ -1,0 +1,79 @@
+#!/bin/bash
+# Linux Shell Contexts
+
+# ------------
+# VARS
+
+export p="/Users/seaman/GhostWriter"
+export pub="/Users/seaman/SHRINKING-WORLD-PUBS"
+
+
+# ------------
+# ALIASES
+
+# Pub Script
+alias pub="d $pub"
+alias project='pm pub project'
+alias chapter='pm pub chapter'
+alias create='pm pub create'
+alias doc='pm pub doc'
+alias edit='pm pub edit'
+alias files='pm pub files'
+alias publish='pm pub publish'
+
+# Django aliases
+alias pm='python manage.py'
+alias r='pm runserver 8000'
+alias dt='pm test'
+alias migrate='pm makemigrations && pm migrate'
+
+# Git aliases
+alias ga='git add -A . && git commit -m'
+alias gco='git checkout'
+alias gd='git diff'
+alias gl='git log --name-only'
+alias gs='pm vc status'
+alias pull='git pull'
+alias push='git push'
+alias s='git status'
+
+# Linux command context
+alias g='grep --color=auto'
+alias l='ls -al'
+alias lc='wc -l'
+alias u='d ..'
+alias h='history 100'
+alias p=python
+
+
+# -----------------
+# Linux functions
+
+function d {
+    directory=$1
+    [ -z "$1" ] && directory="$p"
+    [ -z "$1" ] || echo $directory && cd $directory && l
+}
+
+# Big commit on current directory
+function c {
+    git add -A .       &&
+    git commit -m "$*" &&
+    git push
+    git status
+}
+
+# Show the Python setup
+function py {
+    echo "Python environment"
+    echo PYTHON_PATH = `which python`
+    echo "Python Packages"
+    pip freeze
+}
+
+
+# ------------------
+# Directory
+
+d 
+

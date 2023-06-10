@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from django.test import TestCase
 from requests import get
 

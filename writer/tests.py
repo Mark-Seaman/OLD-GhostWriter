@@ -1,13 +1,15 @@
 from pathlib import Path
+
 from django.test import TestCase
 from requests import get
-from publish.files import create_directory
 
+from publish.files import create_directory
 from publish.pub import pub_path
 from publish.text import text_lines
 
-from .pub_script import extract_outline, markdown_to_outline, pub_script_command
 from .tests_django import DjangoTest
+from .writer_script import (extract_outline, markdown_to_outline,
+                            pub_script_command)
 
 
 class GhostTest(DjangoTest):
@@ -39,7 +41,8 @@ class GhostTest(DjangoTest):
             pub_path('GhostWriter', 'GhostWriter', 'B-Ideas.ai'), 12, 24)
 
     def test_doc(self):
-        pub_script_command('doc', ['GhostWriter', 'GhostWriter', 'B-Ideas.md'], False)
+        pub_script_command(
+            'doc', ['GhostWriter', 'GhostWriter', 'B-Ideas.md'], False)
 
     # def test_outline(self):
     #     text = pub_script_command(

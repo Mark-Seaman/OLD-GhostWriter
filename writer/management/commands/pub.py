@@ -1,19 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from chatterbox.pub_script import pub_script_command
-
-
-'''
-Writer Script
-
-Examples:
-- project SoftwareEngineering
-- chapter SoftwareEngineering 08
-- gpt  SoftwareEngineering 08 Outline.md
-- publish SoftwareEngineering 08
-- edit SoftwareEngineering 08
-
-'''
+from writer.writer_script import pub_script_command
 
 
 class Command(BaseCommand):

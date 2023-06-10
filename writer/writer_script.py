@@ -1,4 +1,4 @@
-from os import getenv, system
+from os import getenv
 from pathlib import Path
 from re import match
 
@@ -7,7 +7,7 @@ from django.template.loader import render_to_string
 
 from publish.files import copy_files, create_directory
 from publish.pub import pub_edit, pub_path
-from publish.text import  text_join
+from publish.text import text_join
 
 
 def chapter_script(args):
@@ -102,7 +102,8 @@ def project_script(args):
         pub_root = pub_path() / pub_dir
         js = pub_root / f'pub.json'
         if not js.exists():
-            data = dict(pub_name=pub_name, pub_dir=pub_dir, tag_line='AI tools for Authors')
+            data = dict(pub_name=pub_name, pub_dir=pub_dir,
+                        tag_line='AI tools for Authors')
             json = render_to_string('pub_script/pub.json', data)
             js.write_text(json)
 
@@ -110,7 +111,6 @@ def project_script(args):
         return 'usage: project pub-dir'
     make_json(args[0])
     return f'project (pub_dir={args[0]})'
-
 
 
 def publish_script(args):
@@ -165,4 +165,3 @@ def pub_script_command(command, args, edit=True):
     else:
         output = "Invalid command: {}".format(command) + usage
     return output
-

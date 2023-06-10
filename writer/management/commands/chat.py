@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from chatterbox.ai import do_gpt_task
+from writer.ai import do_gpt_task
 
 
 class Command(BaseCommand):

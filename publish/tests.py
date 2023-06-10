@@ -1,7 +1,7 @@
 from os import getenv
 from pathlib import Path
 
-from chatterbox.tests_django import DjangoTest
+from writer.tests_django import DjangoTest
 
 from .models import Document
 from .pub import chapter_list, doc_html, doc_list, doc_text, doc_title, pub_path, list_pubs, pub_view_data, read_pub_doc

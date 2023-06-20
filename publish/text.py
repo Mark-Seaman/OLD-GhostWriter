@@ -1,7 +1,7 @@
 from pathlib import Path
 from re import compile, findall, search, split, sub
 from os.path import exists
-
+from typing import Optional
 
 def text_command(options):
     if options:
@@ -125,15 +125,54 @@ def get_link(text):
         return link[0][0], link[0][1]
 
 
-def include_files(text, dir=None):
+# def include_files(text, text_dir=None):
+#     pattern = r"\[\[(.+)\]\]"
+#     matches = findall(pattern, text)
+#     for filename in matches:
+#         try:
+#             include = (text_dir / filename).read_text()
+#             text = text.replace(f"[[{filename}]]", f'\n\n{include}\n\n')
+#         except FileNotFoundError:
+#             print(f"File '{filename}' not found.")
+#     return text
+
+
+def include_files(text: str, text_dir: Optional[Path] = None) -> str:
+    """
+    Given a text string, this function replaces file names surrounded by double square brackets
+    with the contents of the files. The function starts searching for the file in the text_dir
+    directory and moves up towards the root directory until it either finds the file or reaches
+    the root directory.
+
+    Args:
+        text (str): The text containing file names surrounded by double square brackets.
+        text_dir (Optional[Path]): The directory where the function starts searching for the files.
+
+    Returns:
+        str: The text with the file names replaced by their contents.
+
+    Raises:
+        FileNotFoundError: If a file with a given name is not found in the directory hierarchy.
+    """
+    from writer.pub_dev import pub_path
+
+    root_dir = pub_path()
     pattern = r"\[\[(.+)\]\]"
     matches = findall(pattern, text)
     for filename in matches:
-        try:
-            include = (dir/filename).read_text()
-            text = text.replace(f"[[{filename}]]", f'\n\n{include}\n\n')
-        except FileNotFoundError:
+        found = False
+        current_dir = text_dir
+        while not found and current_dir != root_dir:
+            try:
+                include = (current_dir / filename).read_text()
+                text = text.replace(f"[[{filename}]]", f'\n\n{include}\n\n')
+                found = True
+            except FileNotFoundError:
+                current_dir = current_dir.parent
+
+        if not found:
             print(f"File '{filename}' not found.")
+
     return text
 
 

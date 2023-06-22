@@ -12,33 +12,14 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         x = options.get("command")
-        if not x:
-            print(
-                """Build Options: courses, data, webapps, images, logos, review tasks"""
-            )
-            return
-
-        cmd = x[0]
-        if cmd == "data":
-            print("BUILD DATA")
-            load_data()
-        elif cmd == "pubs":
-            print("BUILD PUBS")
-            print(build_pubs())
-        elif cmd == "review":
-            review_file()
-        elif cmd == "user":
-            get_user_model().objects.get(username="seaman").delete()
-            user_args = dict(
-                username="seaman",
-                email="mark.seaman@shrinking-world.com",
-                password="MS1959-sws",
-            )
-            get_user_model().objects.create_user(**user_args)
-        elif cmd == "webapps":
-            print("BUILD WEB APPS BOOK")
-            generate_textbook()
-        else:
-            print(
-                """Build Options: books, courses, data, webapps, images, logos, tasks"""
-            )
+        usage = "usage:\n    Build Options: data, pubs"
+        if x:
+            if x[0] == "data":
+                print("BUILD DATA")
+                load_data()
+                return
+            elif x[0] == "pubs":
+                print("BUILD PUBS")
+                print(build_pubs())
+                return
+        print(usage)

@@ -75,8 +75,7 @@ def create_pub(pub_name, pub_path):
         source = Path(pub.doc_path)/'../Images'
         dest = Path(pub.image_path[1:])
         if source.exists():
-            if not dest.exists():
-                dest.mkdir()
+            dest.mkdir(exist_ok=True, parents=True)
             for f in source.iterdir():
                 # print(f"COPY FILES {pub.name} {f} {dest/f.name}")
                 copyfile(f, dest/f.name)
@@ -108,25 +107,13 @@ def pub_json_path(name, doc_path):
     
     
 def load_data():
-    def reload_pubs():
-        Pub.objects.all().delete()
-        system("python manage.py loaddata config/publish.json")
-        Content.objects.filter(words=0).delete()
-        pubs = len(Pub.objects.all())
-        print(f"Loaded {pubs} Pubs")
-        content = len(Content.objects.all())
-        print(f"Loaded {content} Content Posts")
-
-    def reload_tasks():
-        Task.objects.all().delete()
-        system("python manage.py loaddata config/task.json")
-        tasks = len(Task.objects.all())
-        print(f"Loaded {tasks} Tasks")
-        tasks = len(Activity.objects.all())
-        print(f"Loaded {tasks} Activities")
-
-    reload_tasks()
-    reload_pubs()
+    Pub.objects.all().delete()
+    system("python manage.py loaddata config/publish.json")
+    Content.objects.filter(words=0).delete()
+    pubs = len(Pub.objects.all())
+    print(f"Loaded {pubs} Pubs")
+    content = len(Content.objects.all())
+    print(f"Loaded {content} Content Posts")
 
 
 def rename_file(f1, f2):

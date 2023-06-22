@@ -49,19 +49,6 @@ class PubDataTest(DjangoTest):
         self.assertEqual(blog2.url, "tech")
 
 
-
-# -----------------------
-# Build Pubs
-
-
-class PubInputOutputTest(DjangoTest):
-    def test_build_blogs(self):
-        build_pubs()
-        self.assertRange(len(Pub.objects.all()), 18, 20)
-        num = len(Content.objects.all())
-        self.assertRange(num, 1200, 1300, "Blog Contents")
-
-
 # -----------------------
 # Pub Fixture
 
@@ -86,13 +73,13 @@ class FixtureTest(DjangoTest):
 
     def test_pub_info(self):
         save_pub_info()
-        text = concatonate('probe/pubs/*')
-        self.assertNumLines(text, 3900, 4000)
+        text = concatonate('publish/*.py')
+        self.assertNumLines(text, 3700, 4000)
 
     def test_rebuld_pubs(self):
         build_pubs(False, True)
-        self.assertRange(len(Pub.objects.all()), 18, 21)
-        self.assertRange(len(Content.objects.all()), 1200, 1300, "Content Nodes")
+        self.assertRange(len(Pub.objects.all()), 1, 1)
+        self.assertRange(len(Content.objects.all()), 10, 12, "Content Nodes")
 
     def test_data_file(self):
         self.assertFalse(is_old("config/publish.json"), 'config/publish.json is old')

@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from writer.ai import do_gpt_task
+from publish.write import write_blog
 
 
 class Command(BaseCommand):
@@ -8,9 +8,10 @@ class Command(BaseCommand):
         parser.add_argument("command", nargs="*", type=str)
 
     def show_usage(self):
-        self.stdout.write("usage: output task content context")
+        self.stdout.write("usage: write [blog|tech|masto|review|words]")
 
     def handle(self, *args, **options):
-        text = do_gpt_task(options.get("command"))
+        x = options.get("command")
+        text = write_blog(x)
         if text:
             self.stdout.write(text)

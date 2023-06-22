@@ -3,9 +3,9 @@ from os.path import exists
 from pathlib import Path
 from re import findall, sub
 
-from .files import read_file
-from .text import char_fix, no_blank_lines, text_join, text_lines, word_count
-# from .image import fix_images
+from publish.files import read_file
+from publish.text import char_fix, no_blank_lines, text_join, text_lines, word_count
+from publish.image import fix_images
 
 
 # def create_document(**kwargs):

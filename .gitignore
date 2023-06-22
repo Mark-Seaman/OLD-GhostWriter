@@ -3,8 +3,6 @@
 .DS_Store
 
 # Documents
-Documents/seamansguide.com/webapps/textbook.epub
-Documents/Github
 Documents/Shrinking-World-Pubs
 
 # Static Assets
@@ -19,6 +17,7 @@ DigitalOcean-static/
 
 # Django Database
 config/hammer.db
+db.sqlite3
 
 # Settings
 hammer/.env

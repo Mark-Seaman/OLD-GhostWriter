@@ -1,0 +1,29 @@
+{% if menu %}
+
+<!-- <pre>MENU:  {{ menu }}</pre> -->
+
+<nav class="navbar navbar-expand-sm bg-dark text-light d-none d-md-block">
+
+    <div class="container">
+
+        <a class="navbar-brand text-light" href="{{ menu.title.1 }}">{{ menu.title.0 }}</a>
+
+        <ul class="navbar-nav ml-auto">
+
+            {% for m in menu.items %}
+            <li class="nav-item">
+
+                <a class="nav-link text-light" href="{{ m.1 }}">{{ m.0 }}</a>
+
+            </li>
+            {% endfor %}
+
+        </ul>
+
+    </div>
+
+</nav>
+{% else %}
+<pre class="bg-dark text-light">NO MENU</pre>
+
+{% endif %}

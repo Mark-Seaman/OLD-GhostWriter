@@ -12,6 +12,12 @@ from subprocess import PIPE, Popen
 
 from publish.text import text_join, text_lines, word_count
 
+def concatonate(file_pattern):
+    text = ''
+    for f in Path().glob(file_pattern):
+        text += f.read_text()
+    return text
+
 
 def content_word_summary(path):
     filetype = '.md'
@@ -203,8 +209,15 @@ def not_excluded(path, exclude):
 
 
 def read_csv_file(path):
-    csv_data = Path(path).read_text()
-    return list(reader(csv_data.splitlines()))
+    csv_file = Path(path)
+    if csv_file.exists():
+        csv_data = csv_file.read_text()
+        return list(reader(csv_data.splitlines()))
+    else:
+        error = f"** ERROR: {csv_file} NOT FOUND **"
+        print(error)
+        assert(False, error)
+        return error
 
 
 def read_csv_text(text):

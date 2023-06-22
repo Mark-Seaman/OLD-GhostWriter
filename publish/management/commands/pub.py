@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from writer.writer_script import pub_script_command
+from writer.writer_script import pub_script
 
 
 class Command(BaseCommand):
@@ -11,7 +11,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         command_args = options['command_args']
-        command = command_args[0]
-        args = command_args[1:]
-        output = pub_script_command(command, args)
+        # command = command_args[0]
+        # args = command_args[1:]
+        output = pub_script(command_args)
         self.stdout.write(output)

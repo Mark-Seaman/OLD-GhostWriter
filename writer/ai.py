@@ -5,7 +5,7 @@ import openai
 
 from publish.files import read_file, write_file
 from publish.text import include_files
-from writer.pub_dev import pub_path
+from writer.pub_dev import pub_path, pub_url
 
 
 def transform_prompt(prompt):
@@ -48,5 +48,5 @@ def pub_ai(**kwargs):
     doc_file = pub_path(pub, chapter, doc)
     update_with_ai(doc_file)
 
-    url = f'/{pub}/{chapter}/{doc}'
+    url = pub_url(pub, chapter, doc)
     return url

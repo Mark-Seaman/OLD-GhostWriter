@@ -1,0 +1,43 @@
+{% extends 'publish_theme.html' %}
+
+
+{% block title %}
+Blog Details
+{% endblock title %}
+
+
+{% block content %}
+
+<div class="row">
+
+    <div class="card col-lg p-5">
+        <h1 class="text-center">The Blog Farm</h1>
+        <h2>{{ blog.title }}</h2>
+
+        <table class="table">
+            <tr>
+                <td>Title</td>
+                <td><a href="/publish/{{ blog.pk }}/">Edit {{ blog.title }}</a></td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>{{ blog.name }}</td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td>{{ blog.description }}</td>
+            </tr>
+            <tr>
+                <td>Subtitle</td>
+                <td>{{ blog.subtitle }}</td>
+            </tr>
+            <tr>
+                <td>Read Blog</td>
+                <td><a href="{{ blog.url }}/Index">{{ blog.title }}</a></td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+{% endblock content %}

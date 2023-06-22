@@ -125,18 +125,6 @@ def get_link(text):
         return link[0][0], link[0][1]
 
 
-# def include_files(text, text_dir=None):
-#     pattern = r"\[\[(.+)\]\]"
-#     matches = findall(pattern, text)
-#     for filename in matches:
-#         try:
-#             include = (text_dir / filename).read_text()
-#             text = text.replace(f"[[{filename}]]", f'\n\n{include}\n\n')
-#         except FileNotFoundError:
-#             print(f"File '{filename}' not found.")
-#     return text
-
-
 def include_files(text: str, text_dir: Optional[Path] = None) -> str:
     """
     Given a text string, this function replaces file names surrounded by double square brackets

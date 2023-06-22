@@ -31,11 +31,12 @@ def create_outline(args):
     return text
 
 
-def doc_script(args, edit=True):
+def doc_script(args, edit=False):
     if not args[2:]:
         return 'usage: doc pub-name chapter-name doc-name'
-    pub, chapter, doc = args
+    pub, chapter, doc = args[:3]
     path = pub_path(pub, chapter, doc)
+    # edit = False
     if edit:
         pub_edit(pub=pub, chapter=chapter, doc=doc)
     return f'doc({path})'
@@ -101,18 +102,40 @@ def project_script(args):
     def make_json(pub_dir):
         pub_name = pub_dir
         pub_root = pub_path() / pub_dir
+        pub_root.mkdir(exist_ok=True, parents=True)
         js = pub_root / f'pub.json'
         if not js.exists():
             data = dict(pub_name=pub_name, pub_dir=pub_dir,
                         tag_line='AI tools for Authors')
             json = render_to_string('pub_script/pub.json', data)
             js.write_text(json)
+        return f'JSON file: {js}\n'
 
+    text = f"Create Pub: {args[0]}\n"
     if not args:
-        return 'usage: project pub-dir'
-    make_json(args[0])
-    return f'project (pub_dir={args[0]})'
+        text += 'usage: project pub-name'
+        return text 
+    text += make_json(args[0])
+    return text
 
+# def pub_json_path(name, doc_path):
+#     path = Path(doc_path)
+#     path.mkdir(exist_ok=True, parents=True)
+#     json1 = Path(f'static/js/{name}.json')
+#     json2 = path/'pub.json'
+#     json3 = path.parent/'pub.json'
+#     if json2.exists():
+#         if path.name == 'Pub':
+#             json2.rename(json3)
+#             return json3
+#         return json2
+#     if json3.exists():
+#         return json3
+#     if json1.exists():
+#         print("COPY FILE", json1, json2)
+#         copyfile(json1, json2)
+#         return json1
+#     return json2
 
 def publish_script(args):
     # Function to handle "edit" command
@@ -146,7 +169,11 @@ usage:
 '''
 
 
-def pub_script_command(command, args, edit=True):
+def pub_script(command_args, edit=True):
+    if not command_args[1:]:
+        return "Invalid command: {}".format(command_args) + usage
+    command = command_args[0]
+    args = command_args[1:]
     if command == 'project':
         output = project_script(args)
     elif command == 'chapter':

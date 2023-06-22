@@ -1,0 +1,35 @@
+{% extends 'writer_theme.html' %}
+
+
+{% block title %}
+Index Page
+{% endblock title %}
+
+
+{% block navbar %}
+{% endblock navbar %}
+
+
+{% block content %}
+
+<div class="row">
+
+    <h1>My Publications</h1>
+    <p>
+        This is the list of the current publications under development.
+        Select the publication that you wish to work on.
+    </p>
+
+    <ul>
+        {% for pub in pubs %}
+        <li>
+            {% autoescape off%}
+            {{ pub }}
+            {% endautoescape %}
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>
+
+{% endblock content %}

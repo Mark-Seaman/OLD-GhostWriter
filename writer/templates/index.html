@@ -1,4 +1,4 @@
-{% extends 'publish_theme.html' %}
+{% extends 'writer_theme.html' %}
 
 
 {% block title %}
@@ -14,22 +14,18 @@ Index Page
 
 <div class="row">
 
-    <h1>My Publications</h1>
-    <p>
-        This is the list of the current publications under development.
-        Select the publication that you wish to work on.
-    </p>
+    <h1>Pub Document Index</h1>
+    <p>This is the index page template. Add your content here.</p>
 
     <ul>
-        {% for pub in pubs %}
+        {% for doc in docs %}
         <li>
             {% autoescape off%}
-            {{ pub }}
+            {{ doc }}
             {% endautoescape %}
         </li>
         {% endfor %}
     </ul>
-
 </div>
 
 {% endblock content %}

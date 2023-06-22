@@ -1,0 +1,6 @@
+        project ai
+        chapter ai Tips
+        chapter ai Mistakes
+        chapter ai AIPlaybook
+        chapter ai GettingStarted
+        chapter ai WriteWithAI

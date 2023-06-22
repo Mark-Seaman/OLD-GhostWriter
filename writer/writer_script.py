@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand
 from django.template.loader import render_to_string
 
 from publish.files import copy_files, create_directory
-from publish.text import text_join
+from publish.text import text_join, text_lines
 
 from .pub_dev import pub_edit, pub_path
 
@@ -179,6 +179,17 @@ def test_script(args):
     return 'Test all pubs'
 
 
+def execute_pub_script(args):
+    if not args:
+        return 'usage: script script-file'
+    script = Path(args[0])
+    if not script.exists():
+        return f'SCRIPT not found: (script)'
+    commands = text_lines(script.read_text())
+    commands = [pub_script(c.strip().split(' ')) for c in commands if c.strip()]
+    return text_join(commands)
+
+
 def pub_script(command_args, edit=True):
     if not command_args:
         return "Invalid command: {}".format(command_args) + usage
@@ -202,6 +213,8 @@ def pub_script(command_args, edit=True):
         output = create_outline(args)
     elif command == 'publish':
         output = publish_script(args)
+    elif command == 'script':
+        output = execute_pub_script(args)
     elif command == 'test':
         output = test_script(args)
     else:

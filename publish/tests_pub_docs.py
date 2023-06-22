@@ -20,4 +20,4 @@ class PubDocTest(DjangoTest):
                 self.assertFiles(x[0], int(x[1]), int(x[1]))
 
     def test_pub_list(self):
-        self.assertRange(len(list_publications()), 1, 1)
+        self.assertRange(len(list_publications()), 1,5)

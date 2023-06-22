@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from probe.tests_django import DjangoTest
+from .tests_django import DjangoTest
 from publish.publication import pub_redirect
 
 from .models import Content, Pub

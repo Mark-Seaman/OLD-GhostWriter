@@ -1,4 +1,4 @@
-from probe.tests_django import DjangoTest
+from .tests_django import DjangoTest
 
 from markdown import markdown
 

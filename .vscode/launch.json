@@ -8,7 +8,8 @@
             "name": "Run Server",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/manage.py",
+            "program": "manage.py",
+            "cwd": "${workspaceFolder}",
             "args": [
                 "runserver",
                 "8002"
@@ -20,12 +21,25 @@
             "name": "Django Test",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/manage.py",
+            "program": "manage.py",
+            "cwd": "${workspaceFolder}",
             "args": [
                 "test"
             ],
             "django": true,
             "justMyCode": true
-        }
+        },
+        {
+            "name": "Pub Script",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": [
+                "pub",
+                "build"
+            ],
+            "django": true,
+            "justMyCode": true
+        },
     ]
 }

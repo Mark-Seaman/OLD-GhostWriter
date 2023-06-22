@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from probe.tests_django import DjangoTest
+from .tests_django import DjangoTest
 from os.path import getmtime
 
 from publish.days import is_old

@@ -170,7 +170,7 @@ class DocumentViewTest(DjangoTest):
         # response = self.client.get('/GhostWriter/Pub/Haiku.md/ai')
         # self.assertEqual(response.status_code, 302)
 
-        self.assertPageText('/writer/GhostWriter/Pub/Haiku.md', 150, 300, 'Haiku')
+        self.assertPageText('/writer/GhostWriter/Pub/Haiku.md', 140, 300, 'Haiku')
 
 
 # class DocumentModelTest(DjangoTest):

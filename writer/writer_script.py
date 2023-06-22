@@ -42,17 +42,6 @@ def doc_script(args, edit=False):
     return f'doc({path})'
 
 
-# def edit_script(args):
-#     # Function to handle "edit" command
-#     # ...
-#     if not args:
-#         return 'usage: pub edit pub-name'
-#     path = pub_path(args[0])
-#     editor = getenv("EDITOR")
-#     system(f'"{editor}" -w "{path}"')
-#     return f'edit "{editor}" "{path}"'
-
-
 def extract_outline(text, section_number):
     lines = text.split('\n')
     outline = ''
@@ -152,6 +141,9 @@ def publish_script(args):
 usage = '''
 
 usage:
+    build
+    test
+
     project GhostWriter writer
     chapter GhostWriter Chapter1
     doc GhostWriter Chapter1 A-Outline.md
@@ -168,13 +160,33 @@ usage:
 
 '''
 
+def ai_script(args):
+    if not args[2:]:
+        return 'usage: ai pub chapter doc'
+    pub_name, chapter, doc = args
+    return f'Running ai on {pub_path(pub_name,chapter,doc)}'
+
+
+def build_script(args):
+    if args:
+        return 'usage: build'
+    return 'Build all pubs'
+
+
+def test_script(args):
+    if args:
+        return 'usage: test'
+    return 'Test all pubs'
+
 
 def pub_script(command_args, edit=True):
-    if not command_args[1:]:
+    if not command_args:
         return "Invalid command: {}".format(command_args) + usage
     command = command_args[0]
     args = command_args[1:]
-    if command == 'project':
+    if command == 'build':
+        output = build_script(args)
+    elif command == 'project':
         output = project_script(args)
     elif command == 'chapter':
         output = chapter_script(args)
@@ -190,6 +202,8 @@ def pub_script(command_args, edit=True):
         output = create_outline(args)
     elif command == 'publish':
         output = publish_script(args)
+    elif command == 'test':
+        output = test_script(args)
     else:
         output = "Invalid command: {}".format(command) + usage
     return output

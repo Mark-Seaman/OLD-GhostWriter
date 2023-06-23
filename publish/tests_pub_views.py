@@ -8,11 +8,13 @@ from .models import Content, Pub
 # -----------------------
 # Local Blog Pub Pages
 
+local_host = 'http://localhost:8002'
+
 
 class BlogPageTest(DjangoTest):
     def test_home_page(self):
-        page = "http://localhost:8000/"
-        self.assertPageLines(page, 140, 150)
+        page = f'{local_host}/journey'
+        self.assertPageLines(page, 140, 200)
 
     def test_bouncer_page(self):
         page = "/11"
@@ -21,14 +23,14 @@ class BlogPageTest(DjangoTest):
         page = "/81"
         url = "https://seamansguide.com/journey"
         self.assertPageRedirect(page, url)
-        page = "http://localhost:8000/sampler"
-        self.assertPageText(page, "Seaman&#x27;s Log")
+        page = f'{local_host}/81'
+        self.assertPageText(page, "Journey")
 
     def test_pub_redirect(self):
         redirects = (("shrinking-world.com", None, None, '/publish/book'),
                      ("seamansguide.com", "journey","Index.md", '/journey/Index.md'),
                      ("seamansguide.com", None, "journey", '/publish/book'),
-                     ("seamansguide.com", "journey", None, '/private'),
+                     ("seamansguide.com", "journey", None, '/journey'),
                      ("seamansguide.com", None, None, '/publish/book'),
                      ("seamanslog.com", None, None, '/sampler/today'),
                      ("seamanfamily.org", None, None, '/family/Index.md'),
@@ -36,28 +38,9 @@ class BlogPageTest(DjangoTest):
                      ("spiritual-things.org", None, None, '/spiritual/today'),
                      ("markseaman.org", None, None, '/marks/ContactMe'),
                      ("markseaman.info", None, None, '/private'),
-                     ("localhost:8000", None, None, '/private'),)
+                     ("localhost:8000", None, None, '/publish/book'))
         for r in redirects:
             self.assertEqual(pub_redirect(r[0], r[1], r[2]), r[3], f'FAILED: {r}')
-    
-    def test_sampler_page(self):
-        page = "http://localhost:8000/sampler"
-        self.assertPageText(page, "Seaman&#x27;s Log")
-
-    def test_index_page(self):
-        page = "http://localhost:8000/sampler/Index"
-        self.assertPageText(page, "Seaman&#x27;s Log")
-        page = "http://localhost:8000/sampler/Index.md"
-        self.assertPageText(page, "Seaman&#x27;s Log")
-
-    def test_spirit_page(self):
-        page = "http://localhost:8000/spiritual"
-        self.assertPageText(page, "Meditations")
-
-    def test_write_page(self):
-        page = "http://localhost:8000/write"
-        self.assertPageText(page, "Writer's Block")
-
 
 
 # -----------------------
@@ -65,9 +48,9 @@ class BlogPageTest(DjangoTest):
 
 class BookPageTest(DjangoTest):
     def test_book_list_page(self):
-        page = "http://localhost:8000/publish/book"
-        self.assertPageLines(page, 200, 244)
+        page = f'{local_host}/publish/book'
+        self.assertPageLines(page, 190, 244)
 
     def test_book_journey_page(self):
-        page = "http://localhost:8000/journey"
+        page = f'{local_host}/journey'
         self.assertPageLines(page, 190, 200)

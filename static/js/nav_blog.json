@@ -1,0 +1,26 @@
+{
+    "menu": {
+        "title": [
+            "Books & Blogs",
+            "/write/Index"
+        ],
+        "items": [
+            [
+                "Mark Seaman",
+                "/marks/ContactMe"
+            ],
+            [
+                "Books",
+                "/publish/book"
+            ],
+            [
+                "Blogs",
+                "/publish/blog"
+            ],
+            [
+                "Shrinking World",
+                "/tech/shrinkingworld-Services"
+            ]
+        ]
+    }
+}

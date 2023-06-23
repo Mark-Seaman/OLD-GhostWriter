@@ -71,19 +71,20 @@ def create_pub(pub_name, pub_path):
             c.retain_object = False
             c.save()
 
-    def copy_static_files(pub):
-        source = Path(pub.doc_path)/'../Images'
-        dest = Path(pub.image_path[1:])
-        if source.exists():
-            dest.mkdir(exist_ok=True, parents=True)
-            for f in source.iterdir():
-                # print(f"COPY FILES {pub.name} {f} {dest/f.name}")
-                copyfile(f, dest/f.name)
-
     pub = update_record(pub_name, pub_path)
     import_pub(pub)
     copy_static_files(pub)
     return pub
+
+
+def copy_static_files(pub):
+    source = Path(pub.doc_path)/'../Images'
+    dest = Path(pub.image_path[1:])
+    if source.exists():
+        dest.mkdir(exist_ok=True, parents=True)
+        for f in source.iterdir():
+            # print(f"COPY FILES {pub.name} {f} {dest/f.name}")
+            copyfile(f, dest/f.name)
 
 
 def pub_json_path(name, doc_path):

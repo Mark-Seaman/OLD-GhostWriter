@@ -6,9 +6,46 @@ from django.core.management.base import BaseCommand
 from django.template.loader import render_to_string
 
 from publish.files import copy_files, create_directory
+from publish.import_export import copy_static_files
+from publish.publication import all_pubs, build_pubs, get_pub, get_pub_info
 from publish.text import text_join, text_lines
 
 from .pub_dev import pub_edit, pub_path
+
+usage = '''
+
+usage:
+    build
+    test
+
+    project GhostWriter writer
+    chapter GhostWriter Chapter1
+    doc GhostWriter Chapter1 A-Outline.md
+    edit GhostWriter Chapter1
+    publish GhostWriter Chapter1 FinalVerson.md
+
+    files GhostWriter Chapter1
+    ai GhostWriter Chapter1 Outline1
+    md GhostWriter Chapter1 Outline1
+    txt GhostWriter Chapter1 Outline1
+
+    # outline GhostWriter Chapter1 Outline1
+    # expand GhostWriter Chapter1 Outline1
+
+'''
+
+def ai_script(args):
+    if not args[2:]:
+        return 'usage: ai pub chapter doc'
+    pub_name, chapter, doc = args
+    return f'Running ai on {pub_path(pub_name,chapter,doc)}'
+
+
+def build_script(args):
+    # if args:
+    #     return 'usage: build'
+    text = build_pubs(True, True)
+    return f'Build all pubs: {text}'
 
 
 def chapter_script(args):
@@ -40,6 +77,17 @@ def doc_script(args, edit=False):
     if edit:
         pub_edit(pub=pub, chapter=chapter, doc=doc)
     return f'doc({path})'
+
+
+def execute_pub_script(args):
+    if not args:
+        return 'usage: script script-file'
+    script = Path(args[0])
+    if not script.exists():
+        return f'SCRIPT not found: (script)'
+    commands = text_lines(script.read_text())
+    commands = [pub_script(c.strip().split(' ')) for c in commands if c.strip()]
+    return text_join(commands)
 
 
 def extract_outline(text, section_number):
@@ -127,67 +175,17 @@ def project_script(args):
 #     return json2
 
 def publish_script(args):
-    # Function to handle "edit" command
-    # ...
-    if not args[1:]:
-        return 'usage: publish pub-name chapter-name'
-    pub_name, chapter = args
-    return f'''\npublish {pub_name} {chapter}
-        - copy the latest version of the chapter draft into the "Pub" directory
-        - rebuild the Pub/Index.md file to match the new contents from "_content.csv" 
-        '''
-
-
-usage = '''
-
-usage:
-    build
-    test
-
-    project GhostWriter writer
-    chapter GhostWriter Chapter1
-    doc GhostWriter Chapter1 A-Outline.md
-    edit GhostWriter Chapter1
-    publish GhostWriter Chapter1 FinalVerson.md
-
-    files GhostWriter Chapter1
-    ai GhostWriter Chapter1 Outline1
-    md GhostWriter Chapter1 Outline1
-    txt GhostWriter Chapter1 Outline1
-
-    # outline GhostWriter Chapter1 Outline1
-    # expand GhostWriter Chapter1 Outline1
-
-'''
-
-def ai_script(args):
-    if not args[2:]:
-        return 'usage: ai pub chapter doc'
-    pub_name, chapter, doc = args
-    return f'Running ai on {pub_path(pub_name,chapter,doc)}'
-
-
-def build_script(args):
-    if args:
-        return 'usage: build'
-    return 'Build all pubs'
-
-
-def test_script(args):
-    if args:
-        return 'usage: test'
-    return 'Test all pubs'
-
-
-def execute_pub_script(args):
     if not args:
-        return 'usage: script script-file'
-    script = Path(args[0])
-    if not script.exists():
-        return f'SCRIPT not found: (script)'
-    commands = text_lines(script.read_text())
-    commands = [pub_script(c.strip().split(' ')) for c in commands if c.strip()]
-    return text_join(commands)
+        return 'usage: publish pub-name'
+    pub_name = args[0]
+    pub = get_pub(pub_name)
+    text = f'\npublish {pub_name}\n'
+    images = Path(pub.doc_path).parent/'Images'
+    if images.exists():
+        text += f'copy the "{pub.image_path}" directory from "{images}"\n'
+        copy_static_files(pub)
+    text += 'rebuild the Pub/Index.md file to match the new contents from "_content.csv" \n'
+    return text
 
 
 def pub_script(command_args, edit=True):
@@ -220,3 +218,16 @@ def pub_script(command_args, edit=True):
     else:
         output = "Invalid command: {}".format(command) + usage
     return output
+
+
+def test_script(args):
+    # if args:
+    #     return 'usage: test'
+
+    text = publish_script(args)
+
+    # text = f'Pubs:\n\n{[str(p) for p in all_pubs()]}\n'
+    # text += get_pub_info(args[0])
+    
+    return f'Test all pubs:\n\n{text}'
+

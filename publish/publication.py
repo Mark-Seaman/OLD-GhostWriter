@@ -167,9 +167,9 @@ def pub_redirect(host, pub, doc):
     if host == "markseaman.info" and not pub:
         return f"/private"
     if ("localhost" in host or "127.0.0.1" in host) and not pub:
-        return f"/private"
-    if not doc or not pub:
-        return f"/private"
+        return f"/publish/book"
+    if not doc:
+        return f"/{pub}"
     return f"/{pub}/{doc}"
 
 
@@ -192,7 +192,7 @@ def save_pub_info():
             f.write_text(text)
 
 
-def select_blog_doc(host, blog, doc):
+def select_blog_doc(host, pub, doc):
     def load_object(pub):
         return Pub.objects.filter(pk=pub.pk).values()[0]
 
@@ -216,7 +216,7 @@ def select_blog_doc(host, blog, doc):
             title=title, html=html, site_title=pub.title, site_subtitle=pub.subtitle
         )
 
-    pub = get_pub(blog)
+    pub = get_pub(pub)
     kwargs = load_object(pub)
     kwargs.update(load_document(pub))
     menu = kwargs.get("menu")
@@ -261,12 +261,6 @@ def show_pub_json(pub=None):
     else:
         pubs = all_pubs()
     return text_join([read_file(pub_json_path(pub.name, pub.doc_path)) for  pub in pubs])
-        
-    # text = "PUB JSON\n\n"
-    # for js in Path("static/js").iterdir():
-    #     text += f"\n\n---\n\n{js}\n\n---\n\n"
-    #     text += js.read_text()
-    # return text
 
 
 def show_pub_words(pub=None):

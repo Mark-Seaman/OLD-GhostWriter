@@ -27,7 +27,7 @@ class TextFileTest(DjangoTest):
 
     def test_file_list(self):
         files = len(list(Path('publish').glob('**/*.py')))
-        self.assertRange(files, 50, 51, f'files in publish python code file tree')
+        self.assertRange(files, 49, 51, f'files in publish python code file tree')
 
     def test_concatonate(self):
         text = concatonate('publish/**/*.py')

@@ -36,8 +36,8 @@
             "program": "${workspaceFolder}/manage.py",
             "args": [
                 "pub",
-                "script",
-                "writer/writer-script.txt"
+                "test",
+                "poem"
             ],
             "django": true,
             "justMyCode": true

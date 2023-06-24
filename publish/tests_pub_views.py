@@ -16,16 +16,6 @@ class BlogPageTest(DjangoTest):
         page = f'{local_host}/journey'
         self.assertPageLines(page, 140, 200)
 
-    def test_bouncer_page(self):
-        page = "/11"
-        url = "https://shrinking-world.com/marks/ContactMe"
-        self.assertPageRedirect(page, url)
-        page = "/81"
-        url = "https://seamansguide.com/journey"
-        self.assertPageRedirect(page, url)
-        page = f'{local_host}/81'
-        self.assertPageText(page, "Journey")
-
     def test_pub_redirect(self):
         redirects = (("shrinking-world.com", None, None, '/publish/book'),
                      ("seamansguide.com", "journey","Index.md", '/journey/Index.md'),

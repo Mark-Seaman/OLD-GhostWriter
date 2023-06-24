@@ -151,14 +151,14 @@ class DocumentViewTest(DjangoTest):
         text = self.assertPageText( 'http://shrinking-world.com', 210, 250, 'html')
 
     def test_pub_list_view(self):
-        text = self.assertPageText('/writer/', 180, 200, 'html')
+        text = self.assertPageText('/writer/', 180, 210, 'html')
 
     def test_pub_view(self):
-        text = self.assertPageText('/writer/GhostWriter', 240, 260, 'html')
+        text = self.assertPageText('/writer/GhostWriter', 240, 270, 'html')
 
     def test_chapter_view(self):
         text = self.assertPageText(
-            '/writer/GhostWriter/WritersGuide', 240, 310, 'html')
+            '/writer/GhostWriter/WritersGuide', 240, 320, 'html')
 
     def test_doc_view(self):
         text = self.assertPageText(

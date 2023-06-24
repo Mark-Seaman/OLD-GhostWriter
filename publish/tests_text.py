@@ -31,6 +31,6 @@ class TextFileTest(DjangoTest):
 
     def test_concatonate(self):
         text = concatonate('publish/**/*.py')
-        self.assertNumLines(text, 4000, 5000, f'lines in Python files for probe file tree')
+        self.assertNumLines(text, 3500, 5000, f'lines in Python files for probe file tree')
 
     

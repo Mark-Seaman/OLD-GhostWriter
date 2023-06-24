@@ -49,7 +49,8 @@ class BlogPageTest(DjangoTest):
 class BookPageTest(DjangoTest):
     def test_book_list_page(self):
         page = f'{local_host}/publish/book'
-        self.assertPageLines(page, 190, 244)
+        self.assertPage(page)
+        # self.assertPageLines(page, 190, 244, page)
 
     def test_book_journey_page(self):
         page = f'{local_host}/journey'

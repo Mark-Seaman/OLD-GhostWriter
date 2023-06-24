@@ -44,8 +44,8 @@ class DjangoTest(TestCase):
         self.assertEqual(response.url, url)
 
 
-    def assertPageLines(self, page, min, max):
-        self.assertNumLines(self.assertPage(page), min, max)
+    def assertPageLines(self, page, min, max, label='Lines of Text'):
+        self.assertNumLines(self.assertPage(page), min, max, label)
 
     def assertPageText(self, page, pattern=None):
         text = self.assertPage(page)

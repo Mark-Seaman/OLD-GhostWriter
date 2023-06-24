@@ -4,6 +4,7 @@ from pathlib import Path
 from markdown import markdown
 
 from publish.document import title
+from publish.files import read_json
 from publish.text import text_join, text_lines
 # from writer.writer_script import pub_script
 
@@ -109,10 +110,13 @@ def pub_path(pub=None, chapter=None, doc=None):
     return path
 
 
-def pub_view_data(**kwargs):
-    pub = kwargs.get('pub')
+def doc_view_data(**kwargs):
+    pub = kwargs.get('pub', 'GhostWriter')
     chapter = kwargs.get('chapter')
     doc = kwargs.get('doc')
+
+    pub_js = pub_path() / pub / "pub.json"
+    kwargs.update(read_json(pub_js))
 
     if doc and chapter and pub:
         kwargs['text'] = read_pub_doc(pub, chapter, doc)
@@ -126,6 +130,7 @@ def pub_view_data(**kwargs):
     kwargs['pubs'] = pub_list()
     kwargs['menu'] = get_menu(pub, chapter, doc)
     return kwargs
+
 
 def edit_files(files):
     editor = getenv("EDITOR")

@@ -3,7 +3,7 @@ from pathlib import Path
 from publish.files import create_directory
 
 from .pub_dev import (doc_html, doc_list, doc_text, doc_title, pub_list,
-                      pub_path, pub_view_data, read_pub_doc)
+                      pub_path, doc_view_data, read_pub_doc)
 from .tests_django import DjangoTest
 from .writer_script import pub_path, pub_script
 
@@ -76,7 +76,7 @@ def ghost_writer_files(glob):
 
 
 def ghost_writer_chapters():
-    chapters = pub_view_data(pub='GhostWriter')['chapters']
+    chapters = doc_view_data(pub='GhostWriter')['chapters']
     return len(chapters)
 
 
@@ -98,7 +98,7 @@ class PubTest(DjangoTest):
 
     def test_num_pubs(self):
         pubs1 = len(pub_list())
-        pubs2 = len(pub_view_data()['pubs'])
+        pubs2 = len(doc_view_data()['pubs'])
         self.assertEqual(pubs1, pubs2)
         self.assertRange(pubs2, 15, 16)
 
@@ -112,7 +112,7 @@ class PubTest(DjangoTest):
         self.assertRange(ghost_writer_files('*/*.txt'), 15, 18)
 
     def test_chapters(self):
-        chapters = pub_view_data(pub='GhostWriter')['chapters']
+        chapters = doc_view_data(pub='GhostWriter')['chapters']
         self.assertRange(len(chapters), 7, 9)
 
     def test_doc_list(self):
@@ -124,7 +124,7 @@ class PubTest(DjangoTest):
         y = read_pub_doc('GhostWriter', 'WritersGuide', 'Chapter1.md')[:26]
         self.assertEqual(y, x)
 
-        x = pub_view_data(pub='GhostWriter', chapter='WritersGuide',
+        x = doc_view_data(pub='GhostWriter', chapter='WritersGuide',
                           doc='Chapter1.md')['text'][:26]
         self.assertEqual(y, x)
 
@@ -141,7 +141,7 @@ class PubTest(DjangoTest):
     def test_doc_html(self):
         html = doc_html('GhostWriter', 'WritersGuide', 'Chapter1.md')
         self.assertNumLines(html, 128, 130)
-        html = pub_view_data(
+        html = doc_view_data(
             pub='GhostWriter', chapter='WritersGuide', doc='Chapter1.md')['html']
         self.assertNumLines(html, 128, 130)
 

@@ -7,7 +7,7 @@
 
     {% if doc %}
 
-    <div class="col-lg-6">
+    <div class="col-lg">
 
         <div class="card">
             <div class="card-header bg-primary">
@@ -23,61 +23,69 @@
     </div>
     {% else %}
 
-    <div class="col-lg-2">
-
-        {% if pubs %}
-        <div>
-            <strong>Pubs</strong>
-            <ul>
-                {% for pub in pubs %}
-                <li>
-                    {% autoescape off%}
-                    {{ pub }}
-                    {% endautoescape %}
-                </li>
-                {% endfor %}
-            </ul>
+    <div class="card">
+        <div class="card-header bg-primary text-light">
+            Document Being Developed
         </div>
-        {% endif%}
+        <div class="card-body bg-light text-dark m-2 p-5">
 
-        {% if pub %}
-        <div>
-            <strong>{{ pub }}</strong>
-            <ul>
-                {% for doc in chapters %}
-                <li>
-                    {% autoescape off%}
-                    {{ doc }}
-                    {% endautoescape %}
-                </li>
-                {% endfor %}
-            </ul>
+            <div class="row">
+
+                {% if pubs %}
+                <div class="col-lg">
+                    <strong>Pubs</strong>
+                    <ul>
+                        {% for pub in pubs %}
+                        <li>
+                            {% autoescape off%}
+                            {{ pub }}
+                            {% endautoescape %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif%}
+
+                {% if pub %}
+                <div class="col-lg">
+                    <strong>{{ pub }}</strong>
+                    <ul>
+                        {% for doc in chapters %}
+                        <li>
+                            {% autoescape off%}
+                            {{ doc }}
+                            {% endautoescape %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif%}
+
+                {% if chapter %}
+                <div class="col-lg">
+                    <strong>{{ chapter }}</strong>
+                    <ul>
+                        {% for doc in docs %}
+                        <li>
+                            {% autoescape off%}
+                            {{ doc }}
+                            {% endautoescape %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif%}
+            </div>
         </div>
-        {% endif%}
-
-        {% if chapter %}
-        <div>
-            <strong>{{ chapter }}</strong>
-            <ul>
-                {% for doc in docs %}
-                <li>
-                    {% autoescape off%}
-                    {{ doc }}
-                    {% endautoescape %}
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-        {% endif%}
-
     </div>
 
     {% endif%}
 
     {% if ai or human %}
-    <div class="col-lg-4">
+    <div class="col-lg">
         <div>
             <a class="btn btn-primary" href="/writer/{{ pub }}/{{ chapter }}/{{ doc }}/">Edit Files</a>
+            <a class="btn btn-primary" href="/writer/{{ pub }}/{{ chapter }}/{{ doc }}/">Publish Chapter</a>
         </div>
 
         {% if human %}

@@ -289,13 +289,15 @@ def show_pubs():
 def verify_pubs(verbose):
     pubs = list_publications()
     for p in pubs:
-        if p:
-            pub = Pub.objects.filter(doc_path=p[1], name=p[0])
-            if pub:
-                pub = pub[0]
-            else:
-                print("NO OBJECT", p)
-                assert False
+        pub = get_pub(p[0])
+        assert pub
+        # if p:
+        #     pub = Pub.objects.filter(doc_path=p[1], name=p[0])
+        #     if pub:
+        #         pub = pub[0]
+        #     else:
+        #         print("NO OBJECT", p)
+        #         assert False
         # if not Path(pub.doc_path).exists():
         #     print(f'   {pub.name} -- {pub.doc_path} -- NOT FOUND')
         assert Path(pub.doc_path).exists()
@@ -307,7 +309,8 @@ def verify_pubs(verbose):
     pubs = list(Pub.objects.all())
     info = line_count(get_pub_info())
     contents = len(Content.objects.all())
-    # min_lines, max_lines = 57, 57
+    # min_lines, max_lines = 0, 1000
+    # assert min_lines < info and info < max_lines
     # if min_lines < info and info < max_lines: 
     #     text = f'Rebuild Pubs:  {text_join([str(p) for p in  pubs])}\n'
     #     text += f'\nPub Info: {info}\n'

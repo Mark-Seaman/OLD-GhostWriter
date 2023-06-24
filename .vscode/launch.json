@@ -36,8 +36,7 @@
             "program": "${workspaceFolder}/manage.py",
             "args": [
                 "pub",
-                "test",
-                "poem"
+                "build"
             ],
             "django": true,
             "justMyCode": true

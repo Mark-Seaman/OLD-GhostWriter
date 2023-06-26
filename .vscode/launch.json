@@ -8,7 +8,7 @@
             "name": "Run Server",
             "type": "python",
             "request": "launch",
-            "program": "manage.py",
+            "program": "${workspaceFolder}/manage.py",
             "cwd": "${workspaceFolder}",
             "args": [
                 "runserver",

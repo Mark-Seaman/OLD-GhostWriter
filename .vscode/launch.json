@@ -34,6 +34,7 @@
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/manage.py",
+            "cwd": "${workspaceFolder}",
             "args": [
                 "pub",
                 "build"

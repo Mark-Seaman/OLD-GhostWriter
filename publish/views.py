@@ -3,12 +3,21 @@ from django.views.generic import RedirectView, TemplateView
 from .files import read_json
 from .import_export import refresh_pub_from_git
 from .models import Pub
-from .publication import get_host, select_blog_doc
+from .publication import (bouncer_redirect, get_host, pub_redirect,
+                          select_blog_doc)
 
+class BouncerRedirectView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        x = bouncer_redirect(kwargs.get('id'))
+        if x:
+            return x
+        host = get_host(self.request)
+        pub = kwargs.get("pub")
+        doc = kwargs.get("doc", 'Index.md')
+        return pub_redirect(host, pub, doc)
 
 class PubRedirectView(RedirectView):
-    url = '/writer/'
-
+    url = '/pubs/book'
 
 class PubView(TemplateView):
     template_name = "pub/blog.html"

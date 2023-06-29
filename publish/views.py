@@ -24,7 +24,6 @@ class PubView(TemplateView):
     template_name = "pub/blog.html"
 
     def get_context_data(self, **kwargs):
-        # host = get_host(self.request)
         pub = kwargs.get("pub")
         doc = kwargs.get("doc", "Index.md")
         kwargs = select_blog_doc(pub, doc)
@@ -66,7 +65,6 @@ class PubDetailView(TemplateView):
 
     def get_context_data(self, **kwargs):
         refresh_pub_from_git()
-        # host = get_host(self.request)
         pub = kwargs.get("pub")
         doc = kwargs.get("doc", "Index.md")
         kwargs = select_blog_doc(pub, doc)
@@ -97,3 +95,14 @@ class PubDetailView(TemplateView):
 #     def get_context_data(self, **kwargs):
 #         return slides_view_context(**kwargs)
 
+
+
+# class BookCoverView(TemplateView):
+#     template_name = 'book_cover.html'
+
+#     def get_context_data(self, **kwargs):
+#         json = Path('static/js/today.json')
+#         kwargs = read_json(json)
+#         kwargs['cover_title'] = True
+#         kwargs['css'] = '/static/css/shrinking-world.css'
+#         return kwargs

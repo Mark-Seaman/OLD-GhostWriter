@@ -1,0 +1,37 @@
+{% extends 'publish_theme.html' %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="header light text-center p-2">
+        <h1>Shrinking World Library</h1>
+    </div>
+
+    {% for pubs in collections %}
+
+    <div class="listing">
+
+        <div class="card light m-md-5 p-md-5">
+            <h3>{{ pubs.type }}</h3>
+            <div class="row">
+
+                {% for pub in pubs.pubs %}
+                <div class="col-md-3 cover">
+                    <a href="{{ pub.url }}">
+                        <b>{{ pub.title }}</b>
+                        <p><img src="{{ pub.cover_image }}" alt="{{ pub.title }}" width="300"></p>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock content %}

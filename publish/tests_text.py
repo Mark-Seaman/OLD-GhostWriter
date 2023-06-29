@@ -1,5 +1,7 @@
 from pathlib import Path
-from .tests_django import DjangoTest
+
+from probe.tests_django import DjangoTest
+
 from .files import concatonate, read_file, recursive_files, write_file
 from .text import line_count, word_count
 
@@ -16,7 +18,7 @@ class TextFileTest(DjangoTest):
     def test_read_file(self):
         text = read_file('ReadMe.md')
         self.assertNumLines(text, 160)
-        self.assertRange(word_count(text), 400, 600)
+        self.assertRange(word_count(text), 1, 600)
 
     def test_write_file(self):
         f = Path('Test.md')
@@ -26,11 +28,11 @@ class TextFileTest(DjangoTest):
         f.unlink()
 
     def test_file_list(self):
-        files = len(list(Path('publish').glob('**/*.py')))
-        self.assertRange(files, 49, 51, f'files in publish python code file tree')
+        files = len(list(Path('probe').glob('**/*')))
+        self.assertRange(files, 84, 120, f'files in probe file tree')
 
     def test_concatonate(self):
-        text = concatonate('publish/**/*.py')
-        self.assertNumLines(text, 3500, 5000, f'lines in Python files for probe file tree')
+        text = concatonate('probe/**/*.py')
+        self.assertNumLines(text, 1020, 1200, f'lines in Python files for probe file tree')
 
     

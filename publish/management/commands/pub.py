@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from writer.writer_script import pub_script
+from writer.pub_dev import pub_script
 
 
 class Command(BaseCommand):

@@ -1,6 +1,9 @@
+from json import loads
 from os import system
 from pathlib import Path
 from shutil import copyfile
+from django.db import models
+
 
 from .document import get_document
 from .files import read_csv_file, read_json
@@ -8,32 +11,22 @@ from .models import Content, Pub
 from .toc import content_file, write_content_csv
 
 
-def create_pub(pub_name, pub_path):
+def create_pub(pub_name, pub_path, verbose=False):
 
     def update_record(name, doc_path):
-        json = pub_json_path(name, doc_path)
-        s = read_json(json)
-        b = Pub.objects.get_or_create(name=name)[0]
-        b.doc_path = doc_path
-        b.title = s["site_title"]
-        b.subtitle = s["site_subtitle"]
-        b.domain = s.get("domain")
-        b.url = s["url"]
-        b.description = s["description"]
-        b.css = s["css"]
-        b.image_path = s["image_path"]
-        b.cover_image = s.get("cover_image")
-        b.pub_type = s.get("pub_type", "blog")
-        b.menu = s.get("menu")
-        b.logo = s.get("logo")
-        b.auto_remove = s.get("auto_remove", False)
-        b.auto_index = s.get("auto_index", False)  # simple_index
-        b.simple_index = s.get("simple_index", False)
-        b.auto_contents = s.get("auto_contents", False)
-        b.index_folders = s.get("index_folders", False)
-        b.index_months = s.get("index_months", False)
-        b.save()
-        return b
+        data = loads(pub_json_path(name, doc_path).read_text())
+        pub, created = Pub.objects.get_or_create(name=name)
+        pub.doc_path = doc_path
+        for field in Pub._meta.get_fields():
+            field_name = field.name
+            if field_name in data and field_name!='id' and data.get(field_name):
+                setattr(pub, field_name, data[field_name])
+        if data.get('site_title') and pub.title != data.get('site_title'):
+            pub.title = data.get('site_title')
+        if data.get('site_subtitle') and pub.subtitle != data.get('site_subtitle'):
+            pub.subtitle = data.get('site_subtitle')
+        pub.save()
+        return pub
 
     def import_pub(pub):
         content = content_file(pub)
@@ -56,21 +49,29 @@ def create_pub(pub_name, pub_path):
 
     def import_content(pub, index):
         content = read_csv_file(index)
-        for row in content:
-            if row[2:]:
-                set_content(pub, "chapter", row[0], row[1], row[2])
-            elif row:
-                set_content(pub, "folder", row[0], 0, row[1])
-        contents = len(Content.objects.filter(blog=pub))
-        # print(f'Contents objects: {pub.name} {contents}')
+        try:
+            for row in content:
+                if row[2:]:
+                    set_content(pub, "chapter", row[0], row[1], row[2])
+                elif row:
+                    set_content(pub, "folder", row[0], 0, row[1])
+            contents = len(Content.objects.filter(blog=pub))
+        except:
+            print(f"***Error while reading CSV ***  -- {index}")
+        if verbose:
+            print(f'Import Contents objects: {pub.name} {contents}')
         assert contents>0
 
     def delete_extra_objects(pub):
-        Content.objects.filter(blog=pub, retain_object=False).delete()
+        x = Content.objects.filter(blog=pub, retain_object=False).delete()
+        if verbose:
+            print(f"Deleting old content nodes: {x[0]}\n")
         for c in Content.objects.filter(blog=pub):
             c.retain_object = False
             c.save()
 
+    if verbose:
+        print(f"\n\nCreating Pub: name={pub_name}, path={pub_path}\n")
     pub = update_record(pub_name, pub_path)
     import_pub(pub)
     copy_static_files(pub)
@@ -141,3 +142,5 @@ def save_pub_data():
         } 2>/dev/null  > /dev/null 
     '''
     system(command)
+
+

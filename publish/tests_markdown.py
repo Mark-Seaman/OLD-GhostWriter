@@ -1,8 +1,6 @@
-from .tests_django import DjangoTest
+from probe.tests_django import DjangoTest
 
 from markdown import markdown
-
-from .models import Content, Pub
 
 
 # -----------------------
